@@ -76,6 +76,10 @@ public class DraftDirector {
         renderableMap.remove(marker);
     }
 
+    public Marker getNearestMarker(Position position) {
+        return markerManager.getNearestMarker(position, 64);
+    }
+
     public void render(Canvas canvas) {
         // TODO: 縮放機制
         for (Renderable renderable : rendererManager.renderObjects) {

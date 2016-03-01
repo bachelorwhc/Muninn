@@ -35,8 +35,17 @@ public class MarkerManager {
      * @param threshold 與<code>position</code>距離的最大值，唯有低於此值的<code>Marker</code>會被<code>return</code>。
      * @return 與<code>position</code>距離最近的<code>Marker</code>，若不存在滿足條件的<code>Marker</code>則為<code>null</code>。
      */
-    public Marker findNearestMarker(final Position position, double threshold) {
+    public Marker getNearestMarker(final Position position, double threshold) {
+        Marker min_distance_marker = null;
+        double min_distance = Double.MAX_VALUE;
 
-        return null;
+        for (final Marker m : markers) {
+            double distance = m.position.getDistanceTo(position);
+            if(distance < threshold && distance < min_distance) {
+                min_distance_marker = m;
+                min_distance = distance;
+            }
+        }
+        return min_distance_marker;
     }
 }
