@@ -3,7 +3,7 @@ package studio.bachelor.draft.utility.renderer;
 import android.graphics.Canvas;
 
 import studio.bachelor.draft.Draft;
-import studio.bachelor.draft.utility.renderer.Renderable;
+import studio.bachelor.draft.utility.Renderable;
 
 /**
  * Created by BACHELOR on 2016/02/24.

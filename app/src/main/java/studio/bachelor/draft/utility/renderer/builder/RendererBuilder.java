@@ -2,7 +2,7 @@ package studio.bachelor.draft.utility.renderer.builder;
 
 import studio.bachelor.draft.DraftDirector;
 import studio.bachelor.draft.utility.Builder;
-import studio.bachelor.draft.utility.renderer.Renderable;
+import studio.bachelor.draft.utility.Renderable;
 
 /**
  * Created by BACHELOR on 2016/02/25.

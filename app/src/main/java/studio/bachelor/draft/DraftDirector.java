@@ -13,10 +13,10 @@ import studio.bachelor.draft.marker.builder.ControlMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
 import studio.bachelor.draft.toolbox.Toolbox;
 import studio.bachelor.draft.utility.Position;
-import studio.bachelor.draft.utility.renderer.MarkerRenderer;
-import studio.bachelor.draft.utility.renderer.Renderable;
+import studio.bachelor.draft.utility.Renderable;
 import studio.bachelor.draft.utility.renderer.RendererManager;
 import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
+import studio.bachelor.muninn.R;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -60,7 +60,9 @@ public class DraftDirector {
             //  建立MakerRenderer
             MarkerRendererBuilder mrb = new MarkerRendererBuilder();
             Renderable marker_renderer = mrb.
-                    setLinkLine((LinkMarker)marker).
+                    setLinkLine((LinkMarker) marker).
+                    setReference(((LinkMarker) marker).getLink()).
+                    setReference(marker).
                     build();
 
             rendererManager.addRenderer(marker_renderer);
@@ -73,7 +75,12 @@ public class DraftDirector {
     public void removeMarker(Marker marker) {
         if(marker == null)
             return;
-        renderableMap.remove(marker);
+        if(renderableMap.containsKey(marker)) {
+            Renderable renderable = renderableMap.get(marker);
+            rendererManager.removeRenderer(renderable);
+            renderableMap.remove(marker);
+        }
+        markerManager.removeMarker(marker);
     }
 
     public Marker getNearestMarker(Position position) {

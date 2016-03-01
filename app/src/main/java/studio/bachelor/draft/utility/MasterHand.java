@@ -35,7 +35,7 @@ public class MasterHand implements
 
     private void moveMarker(Position position) {
         if(markerHold != null) {
-            markerHold.position.set(position);
+            markerHold.move(position);
         }
     }
 

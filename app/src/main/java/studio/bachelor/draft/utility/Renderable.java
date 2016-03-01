@@ -1,4 +1,4 @@
-package studio.bachelor.draft.utility.renderer;
+package studio.bachelor.draft.utility;
 
 import android.graphics.Canvas;
 
