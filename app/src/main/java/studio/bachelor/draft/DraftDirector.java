@@ -15,8 +15,6 @@ import studio.bachelor.draft.toolbox.Tool;
 import studio.bachelor.draft.toolbox.Toolbox;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
-import studio.bachelor.draft.utility.Selectable;
-import studio.bachelor.draft.utility.Touchable;
 import studio.bachelor.draft.utility.renderer.RendererManager;
 import studio.bachelor.draft.utility.renderer.ToolboxRenderer;
 import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
@@ -74,7 +72,6 @@ public class DraftDirector {
 
             Renderable link_renderer = mrb.
                     setReference(linked).
-                    setPoint(linked).
                     build();
 
             rendererManager.addRenderer(marker_renderer);

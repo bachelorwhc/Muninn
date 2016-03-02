@@ -1,14 +1,13 @@
 package studio.bachelor.draft.utility;
 
 import android.content.Context;
-import android.os.Debug;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
 import studio.bachelor.draft.DraftDirector;
 import studio.bachelor.draft.marker.Marker;
+import studio.bachelor.draft.toolbox.Deleter;
 import studio.bachelor.draft.toolbox.Tool;
 
 /**
@@ -20,14 +19,15 @@ public class MasterHand implements
         GestureDetector.OnDoubleTapListener {
     private static final DraftDirector director = DraftDirector.instance;
     public final GestureDetector gestureDetector;
-    private Marker markerHold;
-    private Selectable selection;
+    private studio.bachelor.draft.marker.Marker markerHold;
+    private Marker marker;
+    private Tool tool;
 
     public MasterHand(Context context) {
         gestureDetector = new GestureDetector(context, this);
     }
 
-    private void holdMarker(Marker marker) {
+    private void holdMarker(studio.bachelor.draft.marker.Marker marker) {
         markerHold = marker;
     }
 
@@ -35,28 +35,32 @@ public class MasterHand implements
         markerHold = null;
     }
 
-    private void select(Selectable selection) {
+    private void select(Marker selection) {
         if (selection != null) {
-            this.selection = selection;
-            this.selection.select();
-            if (selection != null && selection instanceof Marker)
-                holdMarker((Marker) selection);
+            this.marker = selection;
+            this.marker.select();
+            if (selection != null && selection instanceof studio.bachelor.draft.marker.Marker)
+                holdMarker((studio.bachelor.draft.marker.Marker) selection);
         }
     }
 
     private void deselect() {
-        if (selection != null)
-            this.selection.deselect();
-        if (selection != null && selection instanceof Marker)
+        if (marker != null)
+            this.marker.deselect();
+        if (marker != null && marker instanceof studio.bachelor.draft.marker.Marker)
             releaseMarker();
-        this.selection = null;
+        this.marker = null;
     }
 
-    private void selecting(Selectable selection) {
+    private void selecting(Marker selection) {
         if (selection != null) {
-            this.selection = selection;
+            this.marker = selection;
             selection.selecting();
         }
+    }
+
+    private void selectTool(Position position) {
+        this.tool = director.getNearestTool(position);
     }
 
     private void moveMarker(Position position) {
@@ -95,6 +99,13 @@ public class MasterHand implements
     public void onLongPress(MotionEvent event) {
         Position position = new Position(event);
         select(director.getNearestMarker(position));
+        if(tool != null) {
+            if(tool instanceof Deleter) {
+                Deleter deleter = (Deleter) tool;
+                deleter.object = marker;
+            }
+            tool.execute();
+        }
     }
 
     @Override
@@ -117,7 +128,9 @@ public class MasterHand implements
     @Override
     public boolean onDoubleTap(MotionEvent event) {
         Position position = new Position(event);
-        director.addMarker(position);
+        if(marker == null) {
+            director.addMarker(position);
+        }
         return true;
     }
 
@@ -130,11 +143,7 @@ public class MasterHand implements
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
         Position position = new Position(event);
-        Tool tool = director.getNearestTool(position);
-        if(tool != null) {
-            select(tool);
-            Log.d("SELECT", tool.getClass().getName());
-        }
+        selectTool(position);
         return true;
     }
 }

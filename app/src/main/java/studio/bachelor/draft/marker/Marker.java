@@ -5,7 +5,6 @@ import studio.bachelor.draft.utility.Lockable;
 import studio.bachelor.draft.utility.Removable;
 import studio.bachelor.draft.utility.Selectable;
 import studio.bachelor.draft.utility.Touchable;
-import studio.bachelor.draft.utility.renderer.MarkerRenderer;
 import studio.bachelor.draft.utility.Position;
 
 /**

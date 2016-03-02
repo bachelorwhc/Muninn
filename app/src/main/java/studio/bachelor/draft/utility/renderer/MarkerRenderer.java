@@ -9,8 +9,6 @@ import java.util.List;
 
 import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.utility.Renderable;
-import studio.bachelor.draft.utility.Position;
-import studio.bachelor.draft.utility.Selectable;
 
 /**
  * Created by BACHELOR on 2016/02/24.
