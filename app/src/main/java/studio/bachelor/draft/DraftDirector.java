@@ -8,7 +8,7 @@ import java.util.Map;
 
 import studio.bachelor.draft.marker.LinkMarker;
 import studio.bachelor.draft.marker.Marker;
-import studio.bachelor.draft.marker.TouchableManager;
+import studio.bachelor.draft.marker.MarkerManager;
 import studio.bachelor.draft.marker.builder.ControlMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
 import studio.bachelor.draft.toolbox.Tool;
@@ -25,7 +25,7 @@ import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
 public class DraftDirector {
     public static final DraftDirector instance = new DraftDirector();
     private Draft draft;
-    private TouchableManager touchableManager;
+    private MarkerManager markerManager;
     private RendererManager rendererManager;
     private Map<Object, Renderable> renderableMap = new HashMap<Object, Renderable>();
     private final Toolbox toolbox = Toolbox.getInstance();
@@ -34,7 +34,7 @@ public class DraftDirector {
 
     {
         draft = Draft.getInstance();
-        touchableManager = touchableManager.getInstance();
+        markerManager = markerManager.getInstance();
         rendererManager = RendererManager.getInstance();
     }
 
@@ -59,8 +59,8 @@ public class DraftDirector {
                     setLink(linked).
                     build();
 
-            touchableManager.addTouchable(marker);
-            touchableManager.addTouchable(linked);
+            markerManager.addMarker(marker);
+            markerManager.addMarker(linked);
 
             //  建立MakerRenderer
             MarkerRendererBuilder mrb = new MarkerRendererBuilder();
@@ -91,11 +91,11 @@ public class DraftDirector {
             rendererManager.removeRenderer(renderable);
             renderableMap.remove(marker);
         }
-        touchableManager.removeTouchable(marker);
+        markerManager.removeMarker(marker);
     }
 
     public Marker getNearestMarker(Position position) {
-        return touchableManager.getNearestMarker(position, 64);
+        return markerManager.getNearestMarker(position, 64);
     }
 
     public Tool getNearestTool(Position position) {
