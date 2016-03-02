@@ -19,6 +19,10 @@ public class Icon implements Renderable {
     private Bitmap bitmap;
     public final Paint paint = new Paint();
 
+    {
+        paint.setAntiAlias(true);
+    }
+
     public Icon(int resource) {
         position = new Position();
         this.resource = resource;

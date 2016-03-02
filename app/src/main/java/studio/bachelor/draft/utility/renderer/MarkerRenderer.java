@@ -19,7 +19,8 @@ public class MarkerRenderer implements Renderable {
     private final Paint paint = new Paint();
 
     {
-
+        paint.setAntiAlias(true);
+        paint.setStrokeCap(Paint.Cap.ROUND);
     }
 
     public MarkerRenderer() {

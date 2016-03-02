@@ -15,6 +15,11 @@ public class Line implements Renderable {
     public final Position tail;
     public final Paint paint = new Paint();
 
+    {
+        paint.setAntiAlias(true);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+    }
+
     public Line() {
         head = new Position();
         tail = new Position();

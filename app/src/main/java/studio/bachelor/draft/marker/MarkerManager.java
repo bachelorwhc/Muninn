@@ -39,10 +39,10 @@ public class MarkerManager {
         Marker min_distance_marker = null;
         double min_distance = Double.MAX_VALUE;
 
-        for (final Marker t : markers) {
-            if(t.canBeTouched(position, threshold)) {
-                min_distance_marker = t;
-                min_distance = t.getDistanceTo(position);
+        for (final Marker marker : markers) {
+            if(marker.canBeTouched(position, threshold) && position.getDistanceTo(marker.position) < min_distance) {
+                min_distance_marker = marker;
+                min_distance = marker.getDistanceTo(position);
             }
         }
         return min_distance_marker;

@@ -14,6 +14,11 @@ public class Point implements Renderable {
     public final Position position;
     public final Paint paint = new Paint();
 
+    {
+        paint.setAntiAlias(true);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+    }
+
     public Point() {
         position = new Position();
     }

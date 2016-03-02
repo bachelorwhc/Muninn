@@ -26,9 +26,11 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
     public float width;
     public float height;
     private static final Map<Toolbox.Tool, Bitmap> iconMap = new HashMap<Toolbox.Tool, Bitmap>();
+    private final Map<Toolbox.Tool, Position> positionMap = new HashMap<Toolbox.Tool, Position>();
 
     static {
         iconMap.put(Toolbox.Tool.DELETER, createBitmapByType(R.drawable.ic_delete_forever_black_48dp));
+        iconMap.put(Toolbox.Tool.MAKER_TYPE_LINK, createBitmapByType(R.drawable.ic_place_black_48dp));
     }
 
     private static Bitmap createBitmapByType(int id) {
@@ -40,6 +42,11 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         this.upperLeftCorner = upper_left_corner;
         this.width = width;
         this.height = height;
+        int i = 0;
+        for (Toolbox.Tool tool : toolbox.tools) {
+            positionMap.put(tool, createToolPosition(tool, i));
+            ++i;
+        }
     }
 
     @Override
@@ -68,7 +75,7 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         if(inGroupRange(position)) {
             int i = 0;
             for (Toolbox.Tool tool : toolbox.tools) {
-                Position tool_position = getToolPosition(tool, i);
+                Position tool_position = positionMap.get(tool);
                 double distance = tool_position.getDistanceTo(position);
                 if (distance < min_disance)
                     min_disance = distance;
@@ -90,7 +97,7 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         if(inGroupRange(position)) {
             int i = 0;
             for (Toolbox.Tool tool : toolbox.tools) {
-                Position tool_position = getToolPosition(tool, i);
+                Position tool_position = positionMap.get(tool);
                 double distance = tool_position.getDistanceTo(position);
                 if (distance < min_disance && distance < threshold) {
                     min_disance = distance;
@@ -102,10 +109,10 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         return return_instance;
     }
 
-    private Position getToolPosition(Toolbox.Tool tool, int index) {
+    private Position createToolPosition(Toolbox.Tool tool, int index) {
         float unit = width / toolbox.tools.size();
         Bitmap bitmap = getToolBitmap(tool);
-        double x = upperLeftCorner.x + index * unit / 2 - bitmap.getWidth() / 2;
+        double x = upperLeftCorner.x + index * unit + unit / 2 - bitmap.getWidth();
         double y = upperLeftCorner.y + height / 2 - bitmap.getHeight() / 2;
         return new Position(x, y);
     }
@@ -120,7 +127,7 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         int i = 0;
         for (Toolbox.Tool tool : toolbox.tools) {
             Bitmap bitmap = getToolBitmap(tool);
-            Position position = getToolPosition(tool, i);
+            Position position = positionMap.get(tool);
             canvas.drawBitmap(bitmap, (float) position.x, (float) position.y, paint);
             ++i;
         }
