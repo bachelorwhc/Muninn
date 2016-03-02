@@ -8,7 +8,7 @@ import java.util.Map;
 
 import studio.bachelor.draft.marker.LinkMarker;
 import studio.bachelor.draft.marker.Marker;
-import studio.bachelor.draft.marker.MarkerManager;
+import studio.bachelor.draft.marker.TouchableManager;
 import studio.bachelor.draft.marker.builder.ControlMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
 import studio.bachelor.draft.toolbox.Toolbox;
@@ -16,7 +16,6 @@ import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
 import studio.bachelor.draft.utility.renderer.RendererManager;
 import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
-import studio.bachelor.muninn.R;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -24,7 +23,7 @@ import studio.bachelor.muninn.R;
 public class DraftDirector {
     public static final DraftDirector instance = new DraftDirector();
     private Draft draft;
-    private MarkerManager markerManager;
+    private TouchableManager markerManager;
     private RendererManager rendererManager;
     private Map<Object, Renderable> renderableMap = new HashMap<Object, Renderable>();
     private Toolbox toolbox;
