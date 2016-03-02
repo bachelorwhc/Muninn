@@ -23,8 +23,10 @@ public class MarkerRendererBuilder extends RendererBuilder {
     }
 
     public MarkerRendererBuilder setReference(Marker marker) {
+        // TODO: 功能調整 分割出setPoint 以及參數設計
         createProductIfNull();
         MarkerRenderer renderer = (MarkerRenderer)product;
+        renderer.setReference(marker);
         Point primitive = new Point(marker.position);
         renderer.primitives.add(primitive);
         primitive.setRadius(3.0f);
@@ -49,6 +51,7 @@ public class MarkerRendererBuilder extends RendererBuilder {
     }
 
     public MarkerRendererBuilder clearProductCache() {
+        super.clearProductCache();
         return (MarkerRendererBuilder)this;
     }
 }

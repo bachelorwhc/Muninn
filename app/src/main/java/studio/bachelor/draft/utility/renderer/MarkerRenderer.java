@@ -10,6 +10,7 @@ import java.util.List;
 import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.utility.Renderable;
 import studio.bachelor.draft.utility.Position;
+import studio.bachelor.draft.utility.Selectable;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -17,14 +18,37 @@ import studio.bachelor.draft.utility.Position;
 public class MarkerRenderer implements Renderable {
     private Marker reference;
     public final List<Renderable> primitives = new LinkedList<Renderable>();
+    private final Paint paint = new Paint();
 
+    {
+
+    }
 
     public MarkerRenderer() {
 
     }
 
+    public void setReference(Marker reference) {
+        this.reference = reference;
+    }
+
     public void onDraw(Canvas canvas) {
-        for(Renderable primitive : primitives ) {
+        if(reference != null) {
+            switch (reference.getSelectionState()) {
+                case SELECTING:
+                    paint.setColor(Color.RED);
+                    // TODO: Make radius variable preference.
+                    canvas.drawCircle((float) reference.position.x, (float) reference.position.y, 6.0f, paint);
+                    break;
+                case SELECTED:
+                    paint.setColor(Color.BLACK);
+                    canvas.drawCircle((float) reference.position.x, (float) reference.position.y, 6.0f, paint);
+                    break;
+                case UNSELECTED:
+                    break;
+            }
+        }
+        for(Renderable primitive : primitives) {
             primitive.onDraw(canvas);
         }
     }

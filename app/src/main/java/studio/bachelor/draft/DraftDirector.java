@@ -23,7 +23,7 @@ import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
 public class DraftDirector {
     public static final DraftDirector instance = new DraftDirector();
     private Draft draft;
-    private TouchableManager markerManager;
+    private TouchableManager touchableManager;
     private RendererManager rendererManager;
     private Map<Object, Renderable> renderableMap = new HashMap<Object, Renderable>();
     private Toolbox toolbox;
@@ -31,7 +31,7 @@ public class DraftDirector {
 
     {
         draft = Draft.getInstance();
-        markerManager = markerManager.getInstance();
+        touchableManager = touchableManager.getInstance();
         toolbox = Toolbox.getInstance();
         rendererManager = RendererManager.getInstance();
     }
@@ -53,21 +53,26 @@ public class DraftDirector {
                     setLink(link).
                     build();
 
-            markerManager.addMarker(marker);
-            markerManager.addMarker(link);
+            touchableManager.addMarker(marker);
+            touchableManager.addMarker(link);
 
             //  建立MakerRenderer
             MarkerRendererBuilder mrb = new MarkerRendererBuilder();
             Renderable marker_renderer = mrb.
                     setLinkLine((LinkMarker) marker).
-                    setReference(((LinkMarker) marker).getLink()).
                     setReference(marker).
                     build();
 
+            Renderable link_renderer = mrb.
+                    setReference(((LinkMarker) marker).getLink()).
+                    build();
+
             rendererManager.addRenderer(marker_renderer);
+            rendererManager.addRenderer(link_renderer);
 
             //  建立對應關係
             renderableMap.put(marker, marker_renderer);
+            renderableMap.put(link, link_renderer);
         }
     }
 
@@ -79,11 +84,11 @@ public class DraftDirector {
             rendererManager.removeRenderer(renderable);
             renderableMap.remove(marker);
         }
-        markerManager.removeMarker(marker);
+        touchableManager.removeMarker(marker);
     }
 
     public Marker getNearestMarker(Position position) {
-        return markerManager.getNearestMarker(position, 64);
+        return touchableManager.getNearestMarker(position, 64);
     }
 
     public void render(Canvas canvas) {

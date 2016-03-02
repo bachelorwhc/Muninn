@@ -7,6 +7,8 @@ import studio.bachelor.draft.utility.Position;
  */
 public class LinkMarker extends Marker {
     /** */
+
+    // TODO: Remove 問題思考
     Marker link;
 
     public LinkMarker() {

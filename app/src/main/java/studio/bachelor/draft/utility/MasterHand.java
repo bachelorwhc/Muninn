@@ -20,6 +20,7 @@ public class MasterHand implements
     private static final DraftDirector director = DraftDirector.instance;
     public final GestureDetector gestureDetector;
     private Marker markerHold;
+    private Selectable selection;
 
     public MasterHand(Context context) {
         gestureDetector = new GestureDetector(context, this);
@@ -31,6 +32,30 @@ public class MasterHand implements
 
     private void releaseMarker() {
         markerHold = null;
+    }
+
+    private void select(Selectable selection) {
+        if(selection != null) {
+            this.selection = selection;
+            this.selection.select();
+            if (selection != null && selection instanceof Marker)
+                holdMarker((Marker) selection);
+        }
+    }
+
+    private void deselect() {
+        if(selection != null)
+            this.selection.deselect();
+        if(selection != null && selection instanceof Marker)
+            releaseMarker();
+        this.selection = null;
+    }
+
+    private void selecting(Selectable selection) {
+        if(selection != null) {
+            this.selection = selection;
+            selection.selecting();
+        }
     }
 
     private void moveMarker(Position position) {
@@ -47,7 +72,7 @@ public class MasterHand implements
                 moveMarker(position);
                 break;
             case MotionEvent.ACTION_UP:
-                releaseMarker();
+                deselect();
                 break;
         }
         gestureDetector.onTouchEvent(event);
@@ -68,7 +93,7 @@ public class MasterHand implements
     @Override
     public void onLongPress(MotionEvent event) {
         Position position = new Position(event);
-        holdMarker(director.getNearestMarker(position));
+        select(director.getNearestMarker(position));
     }
 
     @Override
@@ -78,7 +103,8 @@ public class MasterHand implements
 
     @Override
     public void onShowPress(MotionEvent event) {
-
+        Position position = new Position(event);
+        selecting(director.getNearestMarker(position));
     }
 
     @Override

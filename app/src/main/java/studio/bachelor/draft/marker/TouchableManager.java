@@ -36,7 +36,7 @@ public class TouchableManager {
      * @param threshold 與<code>position</code>距離的最大值，唯有低於此值的<code>Marker</code>會被<code>return</code>。
      * @return 與<code>position</code>距離最近的<code>Marker</code>，若不存在滿足條件的<code>Marker</code>則為<code>null</code>。
      */
-    public Touchable getNearestMarker(final Position position, double threshold) {
+    public Touchable getNearestObject(final Position position, double threshold) {
         Touchable min_distance_touchable = null;
         double min_distance = Double.MAX_VALUE;
 
@@ -47,5 +47,20 @@ public class TouchableManager {
             }
         }
         return min_distance_touchable;
+    }
+
+    public Marker getNearestMarker(final Position position, double threshold) {
+        Marker min_distance_marker = null;
+        double min_distance = Double.MAX_VALUE;
+
+        for (final Touchable t : touchables) {
+            if(t instanceof Marker == false)
+                continue;
+            if(t.canBeTouched(position, threshold)) {
+                min_distance_marker = (Marker)t;
+                min_distance = t.getDistanceTo(position);
+            }
+        }
+        return min_distance_marker;
     }
 }
