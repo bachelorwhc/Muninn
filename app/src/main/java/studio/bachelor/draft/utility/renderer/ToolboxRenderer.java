@@ -5,16 +5,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-import studio.bachelor.draft.toolbox.Deleter;
-import studio.bachelor.draft.toolbox.Tool;
 import studio.bachelor.draft.toolbox.Toolbox;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
-import studio.bachelor.draft.utility.Touchable;
 import studio.bachelor.draft.utility.TouchableGroup;
 import studio.bachelor.muninn.Muninn;
 import studio.bachelor.muninn.R;
@@ -29,10 +25,10 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
     public final Position upperLeftCorner;
     public float width;
     public float height;
-    private static final Map<Type, Bitmap> iconMap = new HashMap<Type, Bitmap>();
+    private static final Map<Toolbox.Tool, Bitmap> iconMap = new HashMap<Toolbox.Tool, Bitmap>();
 
     static {
-        iconMap.put(Deleter.class, createBitmapByType(R.drawable.ic_delete_forever_black_48dp));
+        iconMap.put(Toolbox.Tool.DELETER, createBitmapByType(R.drawable.ic_delete_forever_black_48dp));
     }
 
     private static Bitmap createBitmapByType(int id) {
@@ -71,7 +67,7 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         double min_disance = Double.MAX_VALUE;
         if(inGroupRange(position)) {
             int i = 0;
-            for (Tool tool : toolbox.tools) {
+            for (Toolbox.Tool tool : toolbox.tools) {
                 Position tool_position = getToolPosition(tool, i);
                 double distance = tool_position.getDistanceTo(position);
                 if (distance < min_disance)
@@ -88,12 +84,12 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
     }
 
     @Override
-    public Tool getInstance(Position position, double threshold) {
+    public Toolbox.Tool getInstance(Position position, double threshold) {
         double min_disance = Double.MAX_VALUE;
-        Tool return_instance = null;
+        Toolbox.Tool return_instance = null;
         if(inGroupRange(position)) {
             int i = 0;
-            for (Tool tool : toolbox.tools) {
+            for (Toolbox.Tool tool : toolbox.tools) {
                 Position tool_position = getToolPosition(tool, i);
                 double distance = tool_position.getDistanceTo(position);
                 if (distance < min_disance && distance < threshold) {
@@ -106,7 +102,7 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         return return_instance;
     }
 
-    private Position getToolPosition(Tool tool, int index) {
+    private Position getToolPosition(Toolbox.Tool tool, int index) {
         float unit = width / toolbox.tools.size();
         Bitmap bitmap = getToolBitmap(tool);
         double x = upperLeftCorner.x + index * unit / 2 - bitmap.getWidth() / 2;
@@ -114,16 +110,15 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         return new Position(x, y);
     }
 
-    private Bitmap getToolBitmap(Tool tool) {
-        Type type = tool.getClass();
-        Bitmap bitmap = iconMap.get(type);
+    private Bitmap getToolBitmap(Toolbox.Tool tool) {
+        Bitmap bitmap = iconMap.get(tool);
         return bitmap;
     }
 
     @Override
     public void onDraw(Canvas canvas) {
         int i = 0;
-        for (Tool tool : toolbox.tools) {
+        for (Toolbox.Tool tool : toolbox.tools) {
             Bitmap bitmap = getToolBitmap(tool);
             Position position = getToolPosition(tool, i);
             canvas.drawBitmap(bitmap, (float) position.x, (float) position.y, paint);

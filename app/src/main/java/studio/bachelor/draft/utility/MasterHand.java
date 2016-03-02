@@ -7,8 +7,7 @@ import android.view.View;
 
 import studio.bachelor.draft.DraftDirector;
 import studio.bachelor.draft.marker.Marker;
-import studio.bachelor.draft.toolbox.Deleter;
-import studio.bachelor.draft.toolbox.Tool;
+import studio.bachelor.draft.toolbox.Toolbox;
 
 /**
  * Created by BACHELOR on 2016/03/01.
@@ -20,8 +19,8 @@ public class MasterHand implements
     private static final DraftDirector director = DraftDirector.instance;
     public final GestureDetector gestureDetector;
     private studio.bachelor.draft.marker.Marker markerHold;
-    private Marker marker;
-    private Tool tool;
+    private Marker markerSelect;
+    private Toolbox.Tool toolSelect;
 
     public MasterHand(Context context) {
         gestureDetector = new GestureDetector(context, this);
@@ -37,29 +36,29 @@ public class MasterHand implements
 
     private void select(Marker selection) {
         if (selection != null) {
-            this.marker = selection;
-            this.marker.select();
+            this.markerSelect = selection;
+            this.markerSelect.select();
             holdMarker(selection);
         }
     }
 
     private void deselect() {
-        if (marker != null) {
-            this.marker.deselect();
+        if (markerSelect != null) {
+            this.markerSelect.deselect();
             releaseMarker();
         }
-        this.marker = null;
+        this.markerSelect = null;
     }
 
     private void selecting(Marker selection) {
         if (selection != null) {
-            this.marker = selection;
+            this.markerSelect = selection;
             selection.selecting();
         }
     }
 
     private void selectTool(Position position) {
-        this.tool = director.getNearestTool(position);
+        this.toolSelect = director.getNearestTool(position);
     }
 
     private void moveMarker(Position position) {
@@ -98,12 +97,8 @@ public class MasterHand implements
     public void onLongPress(MotionEvent event) {
         Position position = new Position(event);
         select(director.getNearestMarker(position));
-        if(tool != null) {
-            if(tool instanceof Deleter) {
-                Deleter deleter = (Deleter) tool;
-                deleter.object = marker;
-            }
-            tool.execute();
+        if(toolSelect != null) {
+
         }
     }
 
@@ -127,7 +122,7 @@ public class MasterHand implements
     @Override
     public boolean onDoubleTap(MotionEvent event) {
         Position position = new Position(event);
-        if(marker == null) {
+        if(markerSelect == null) {
             director.addMarker(position);
         }
         return true;

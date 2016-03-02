@@ -11,7 +11,6 @@ import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.marker.MarkerManager;
 import studio.bachelor.draft.marker.builder.ControlMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
-import studio.bachelor.draft.toolbox.Tool;
 import studio.bachelor.draft.toolbox.Toolbox;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
@@ -98,7 +97,7 @@ public class DraftDirector {
         return markerManager.getNearestMarker(position, 64);
     }
 
-    public Tool getNearestTool(Position position) {
+    public Toolbox.Tool getNearestTool(Position position) {
         return toolboxRenderer.getInstance(position, 64);
     }
 
@@ -110,5 +109,7 @@ public class DraftDirector {
         for (Renderable renderable : rendererManager.renderObjects) {
             renderable.onDraw(canvas);
         }
+
+        //canvas.drawText("DEBUG INFO\n TOOL:" + , canvas.getWidth()/2, canvas.getHeight()-TEXT_PADDING, textPaint);
     }
 }

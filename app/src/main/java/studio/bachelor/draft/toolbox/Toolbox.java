@@ -1,6 +1,8 @@
 package studio.bachelor.draft.toolbox;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import studio.bachelor.draft.DraftDirector;
@@ -14,10 +16,13 @@ public class Toolbox{
     static public Toolbox getInstance() {
         return instance;
     }
+    public enum Tool {
+        DELETER, MAKER_TYPE_LINK
+    }
 
-    public final List<Tool> tools = new ArrayList<Tool>();
+    public final ArrayList<Tool> tools = new ArrayList<>(Arrays.asList(Tool.values()));
 
     private Toolbox() {
-        tools.add(new Deleter());
+
     }
 }
