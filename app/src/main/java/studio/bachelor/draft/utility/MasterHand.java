@@ -39,16 +39,15 @@ public class MasterHand implements
         if (selection != null) {
             this.marker = selection;
             this.marker.select();
-            if (selection != null && selection instanceof studio.bachelor.draft.marker.Marker)
-                holdMarker((studio.bachelor.draft.marker.Marker) selection);
+            holdMarker(selection);
         }
     }
 
     private void deselect() {
-        if (marker != null)
+        if (marker != null) {
             this.marker.deselect();
-        if (marker != null && marker instanceof studio.bachelor.draft.marker.Marker)
             releaseMarker();
+        }
         this.marker = null;
     }
 
