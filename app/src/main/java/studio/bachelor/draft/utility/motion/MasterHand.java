@@ -1,13 +1,15 @@
-package studio.bachelor.draft.utility;
+package studio.bachelor.draft.utility.motion;
 
 import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
+import studio.bachelor.draft.Draft;
 import studio.bachelor.draft.DraftDirector;
 import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.toolbox.Toolbox;
+import studio.bachelor.draft.utility.Position;
 
 /**
  * Created by BACHELOR on 2016/03/01.
@@ -16,66 +18,37 @@ public class MasterHand implements
         View.OnTouchListener,
         GestureDetector.OnGestureListener,
         GestureDetector.OnDoubleTapListener {
+    private static final MotionHandler handler = MotionHandler.getInstance();
     private static final DraftDirector director = DraftDirector.instance;
     public final GestureDetector gestureDetector;
-    private studio.bachelor.draft.marker.Marker markerHold;
-    private Marker markerSelect;
-    private Toolbox.Tool toolSelect;
 
     public MasterHand(Context context) {
         gestureDetector = new GestureDetector(context, this);
     }
 
-    private void holdMarker(studio.bachelor.draft.marker.Marker marker) {
-        markerHold = marker;
-    }
+    private void postMotion(MotionHandler.Motion motion, MotionEvent event1, MotionEvent event2) {
+        Position position_first = null;
+        Position position_second = null;
+        if(event1 != null)
+            position_first = new Position(event1);
 
-    private void releaseMarker() {
-        markerHold = null;
-    }
+        if(event2 != null)
+            position_second = new Position(event2);
 
-    private void select(Marker selection) {
-        if (selection != null) {
-            this.markerSelect = selection;
-            this.markerSelect.select();
-            holdMarker(selection);
+        Toolbox.Tool tool = null;
+        Marker marker = null;
+        if(position_first != null) {
+            tool = director.getNearestTool(position_first);
+            marker = director.getNearestMarker(position_first);
         }
-    }
-
-    private void deselect() {
-        if (markerSelect != null) {
-            this.markerSelect.deselect();
-            releaseMarker();
-        }
-        this.markerSelect = null;
-    }
-
-    private void selecting(Marker selection) {
-        if (selection != null) {
-            this.markerSelect = selection;
-            selection.selecting();
-        }
-    }
-
-    private void selectTool(Position position) {
-        this.toolSelect = director.getNearestTool(position);
-    }
-
-    private void moveMarker(Position position) {
-        if (markerHold != null) {
-            markerHold.move(position);
-        }
+        handler.postMotion(motion, tool, marker, position_first, position_second);
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Position position = new Position(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_MOVE:
-                moveMarker(position);
-                break;
-            case MotionEvent.ACTION_UP:
-                deselect();
+                postMotion(MotionHandler.Motion.MOVE, event, null);
                 break;
         }
         gestureDetector.onTouchEvent(event);
@@ -95,11 +68,7 @@ public class MasterHand implements
 
     @Override
     public void onLongPress(MotionEvent event) {
-        Position position = new Position(event);
-        select(director.getNearestMarker(position));
-        if(toolSelect != null) {
 
-        }
     }
 
     @Override
@@ -110,7 +79,7 @@ public class MasterHand implements
     @Override
     public void onShowPress(MotionEvent event) {
         Position position = new Position(event);
-        selecting(director.getNearestMarker(position));
+
     }
 
     @Override
@@ -122,22 +91,19 @@ public class MasterHand implements
     @Override
     public boolean onDoubleTap(MotionEvent event) {
         Position position = new Position(event);
-        if(markerSelect == null) {
-            director.addMarker(position);
-        }
+
         return true;
     }
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent event) {
-
+        postMotion(MotionHandler.Motion.DOUBLE_TAP, event, null);
         return true;
     }
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
-        Position position = new Position(event);
-        selectTool(position);
+        postMotion(MotionHandler.Motion.SINGLE_TAP, event, null);
         return true;
     }
 }

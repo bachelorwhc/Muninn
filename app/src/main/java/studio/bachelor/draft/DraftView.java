@@ -3,12 +3,9 @@ package studio.bachelor.draft;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 
-import studio.bachelor.draft.utility.MasterHand;
+import studio.bachelor.draft.utility.motion.MasterHand;
 import studio.bachelor.draft.utility.Position;
 
 /**
