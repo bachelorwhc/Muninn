@@ -22,12 +22,12 @@ public class TouchableManager {
 
     }
 
-    public void addMarker(final Touchable touchable) {
+    public void addTouchable(final Touchable touchable) {
         if(touchables != null)
             touchables.add(touchable);
     }
 
-    public void removeMarker(final Touchable touchable) {
+    public void removeTouchable(final Touchable touchable) {
         if(touchables != null)
             touchables.remove(touchable);
     }

@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import studio.bachelor.draft.utility.MasterHand;
+import studio.bachelor.draft.utility.Position;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -36,6 +37,7 @@ public class DraftView extends View{
     @Override
     protected void onSizeChanged(int w, int h, int old_w, int old_h) {
         super.onSizeChanged(w, h, old_w, old_h);
+        director.setToolboxRenderer(new Position(w / 10, 0), w - w / 10, h / 10);
     }
 
     @Override

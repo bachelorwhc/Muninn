@@ -9,6 +9,7 @@ import android.view.View;
 
 import studio.bachelor.draft.DraftDirector;
 import studio.bachelor.draft.marker.Marker;
+import studio.bachelor.draft.toolbox.Tool;
 
 /**
  * Created by BACHELOR on 2016/03/01.
@@ -35,7 +36,7 @@ public class MasterHand implements
     }
 
     private void select(Selectable selection) {
-        if(selection != null) {
+        if (selection != null) {
             this.selection = selection;
             this.selection.select();
             if (selection != null && selection instanceof Marker)
@@ -44,22 +45,22 @@ public class MasterHand implements
     }
 
     private void deselect() {
-        if(selection != null)
+        if (selection != null)
             this.selection.deselect();
-        if(selection != null && selection instanceof Marker)
+        if (selection != null && selection instanceof Marker)
             releaseMarker();
         this.selection = null;
     }
 
     private void selecting(Selectable selection) {
-        if(selection != null) {
+        if (selection != null) {
             this.selection = selection;
             selection.selecting();
         }
     }
 
     private void moveMarker(Position position) {
-        if(markerHold != null) {
+        if (markerHold != null) {
             markerHold.move(position);
         }
     }
@@ -128,7 +129,12 @@ public class MasterHand implements
 
     @Override
     public boolean onSingleTapConfirmed(MotionEvent event) {
-
+        Position position = new Position(event);
+        Tool tool = director.getNearestTool(position);
+        if(tool != null) {
+            select(tool);
+            Log.d("SELECT", tool.getClass().getName());
+        }
         return true;
     }
 }

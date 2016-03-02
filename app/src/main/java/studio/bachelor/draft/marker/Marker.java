@@ -1,6 +1,8 @@
 package studio.bachelor.draft.marker;
 
+import studio.bachelor.draft.DraftDirector;
 import studio.bachelor.draft.utility.Lockable;
+import studio.bachelor.draft.utility.Removable;
 import studio.bachelor.draft.utility.Selectable;
 import studio.bachelor.draft.utility.Touchable;
 import studio.bachelor.draft.utility.renderer.MarkerRenderer;
@@ -9,9 +11,10 @@ import studio.bachelor.draft.utility.Position;
 /**
  * <code>Marker</code>，作為<code>Draft</code>上所顯示的標記。
  */
-public abstract class Marker implements Lockable, Touchable, Selectable {
+public abstract class Marker implements Lockable, Touchable, Selectable, Removable {
     /** 自 0.2.0 起，<code>position</code>將以<code>Draft</code>中心為基準點。 */
     public final Position position = new Position();
+    protected static DraftDirector director = DraftDirector.instance;
     private boolean locked = false;
     State selectionState = State.UNSELECTED;
 
@@ -22,6 +25,10 @@ public abstract class Marker implements Lockable, Touchable, Selectable {
     public Marker(Position position) {
         this.position.x = position.x;
         this.position.y = position.y;
+    }
+
+    public void remove() {
+        director.removeMarker(this);
     }
 
     public void move(Position position) {

@@ -13,4 +13,9 @@ public class ControlMarker extends Marker {
     public ControlMarker(Position position) {
         super(position);
     }
+
+    @Override
+    public void remove() {
+
+    }
 }

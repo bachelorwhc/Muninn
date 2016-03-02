@@ -19,6 +19,12 @@ public class LinkMarker extends Marker {
         super(position);
     }
 
+    @Override
+    public void remove() {
+        director.removeMarker(link);
+        super.remove();
+    }
+
     public void setLink(Marker marker) {
         this.link = marker;
     }
