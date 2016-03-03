@@ -2,12 +2,10 @@ package studio.bachelor.draft.utility.renderer.builder;
 
 import studio.bachelor.draft.marker.LinkMarker;
 import studio.bachelor.draft.marker.Marker;
-import studio.bachelor.draft.utility.Renderable;
-import studio.bachelor.draft.utility.primitive.Icon;
-import studio.bachelor.draft.utility.primitive.Line;
-import studio.bachelor.draft.utility.primitive.Point;
+import studio.bachelor.draft.utility.renderer.primitive.Icon;
+import studio.bachelor.draft.utility.renderer.primitive.Line;
+import studio.bachelor.draft.utility.renderer.primitive.Point;
 import studio.bachelor.draft.utility.renderer.MarkerRenderer;
-import studio.bachelor.muninn.R;
 
 /**
  * Created by BACHELOR on 2016/02/25.

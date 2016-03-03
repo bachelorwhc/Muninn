@@ -1,4 +1,4 @@
-package studio.bachelor.draft.utility.primitive;
+package studio.bachelor.draft.utility.renderer.primitive;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
