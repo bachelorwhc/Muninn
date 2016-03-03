@@ -29,7 +29,7 @@ public class DraftDirector {
     public static final DraftDirector instance = new DraftDirector();
     private Draft draft;
     private DraftRenderer draftRenderer;
-    private MarkerManager markerManager;
+    //private MarkerManager markerManager;
     private RendererManager rendererManager;
     private Map<Object, Renderable> renderableMap = new HashMap<Object, Renderable>();
     private final Toolbox toolbox = Toolbox.getInstance();
@@ -44,7 +44,7 @@ public class DraftDirector {
     {
         draft = Draft.getInstance();
         draftRenderer = new DraftRenderer(draft);
-        markerManager = markerManager.getInstance();
+        //markerManager = markerManager.getInstance();
         rendererManager = RendererManager.getInstance();
     }
 
@@ -54,6 +54,10 @@ public class DraftDirector {
 
     public void setBirdviewImageByUri(Uri uri) {
         draftRenderer.setBirdview(uri);
+    }
+
+    public void setWidthAndHeight(float width, float height) {
+        this.draft.setWidthAndHeight(width, height);
     }
 
     public void setToolboxRenderer(Position upper_left_corner, float width, float height) {
@@ -73,8 +77,8 @@ public class DraftDirector {
                     setLink(linked).
                     build();
 
-            markerManager.addMarker(marker);
-            markerManager.addMarker(linked);
+            draft.addMarker(marker);
+            draft.addMarker(linked);
 
             //  建立MakerRenderer
             MarkerRendererBuilder mrb = new MarkerRendererBuilder();
@@ -105,11 +109,11 @@ public class DraftDirector {
             rendererManager.removeRenderer(renderable);
             renderableMap.remove(marker);
         }
-        markerManager.removeMarker(marker);
+        draft.removeMarker(marker);
     }
 
     public Marker getNearestMarker(Position position) {
-        return markerManager.getNearestMarker(position, 64);
+        return draft.getNearestMarker(position);
     }
 
     public Toolbox.Tool getNearestTool(Position position) {

@@ -11,13 +11,11 @@ import studio.bachelor.draft.utility.Position;
  */
 public class MarkerManager {
     public final List<Marker> markers = new LinkedList<Marker>();
-    private static final DraftDirector director = DraftDirector.instance;
-    private static final MarkerManager instance = new MarkerManager();
-    public static MarkerManager getInstance() {
-        return instance;
-    }
+    //private static final DraftDirector director = DraftDirector.instance;
+    //private static final MarkerManager instance = new MarkerManager();
+    /*public static MarkerManager getInstance() { return instance; }*/
 
-    private MarkerManager() {
+    public MarkerManager() {
 
     }
 
