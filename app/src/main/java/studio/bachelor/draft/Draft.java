@@ -1,6 +1,7 @@
 package studio.bachelor.draft;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.View;
 

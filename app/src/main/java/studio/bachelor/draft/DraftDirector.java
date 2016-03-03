@@ -3,6 +3,7 @@ package studio.bachelor.draft;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.net.Uri;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
 import studio.bachelor.draft.toolbox.Toolbox;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
+import studio.bachelor.draft.utility.renderer.DraftRenderer;
 import studio.bachelor.draft.utility.renderer.RendererManager;
 import studio.bachelor.draft.utility.renderer.ToolboxRenderer;
 import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
@@ -26,6 +28,7 @@ import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
 public class DraftDirector {
     public static final DraftDirector instance = new DraftDirector();
     private Draft draft;
+    private DraftRenderer draftRenderer;
     private MarkerManager markerManager;
     private RendererManager rendererManager;
     private Map<Object, Renderable> renderableMap = new HashMap<Object, Renderable>();
@@ -40,12 +43,17 @@ public class DraftDirector {
 
     {
         draft = Draft.getInstance();
+        draftRenderer = new DraftRenderer(draft);
         markerManager = markerManager.getInstance();
         rendererManager = RendererManager.getInstance();
     }
 
     private DraftDirector() {
 
+    }
+
+    public void setBirdviewImageByUri(Uri uri) {
+        draftRenderer.setBirdview(uri);
     }
 
     public void setToolboxRenderer(Position upper_left_corner, float width, float height) {
@@ -109,6 +117,8 @@ public class DraftDirector {
     }
 
     public void render(Canvas canvas) {
+        draftRenderer.onDraw(canvas);
+
         // TODO: 縮放機制
         if(toolboxRenderer != null)
             toolboxRenderer.onDraw(canvas);
@@ -175,4 +185,5 @@ public class DraftDirector {
         if(this.markerHold != null)
             this.markerHold.move(position);
     }
+
 }
