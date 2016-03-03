@@ -33,6 +33,10 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         iconMap.put(Toolbox.Tool.MAKER_TYPE_LINK, createBitmapByType(R.drawable.ic_place_black_48dp));
     }
 
+    static public Bitmap getToolIcon(Toolbox.Tool tool) {
+        return iconMap.get(tool);
+    }
+
     private static Bitmap createBitmapByType(int id) {
         return BitmapFactory.decodeResource(Muninn.getContext().getResources(), id);
     }

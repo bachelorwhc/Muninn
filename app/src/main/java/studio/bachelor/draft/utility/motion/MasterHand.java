@@ -66,6 +66,9 @@ public class MasterHand implements
             case MotionEvent.ACTION_MOVE:
                 postMotion(MotionHandler.Motion.MOVE, event, null);
                 break;
+            case MotionEvent.ACTION_UP:
+                postMotion(MotionHandler.Motion.UP, event, null);
+                break;
         }
         gestureDetector.onTouchEvent(event);
         scaleGestureDetector.onTouchEvent(event);
