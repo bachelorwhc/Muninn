@@ -33,7 +33,9 @@ public class MotionHandler {
     }
 
     public void postMotion(Motion motion, Toolbox.Tool tool, Marker marker, Position position_first, Position position_second) {
-
-
+        switch (motion) {
+            case DOWN:
+                break;
+        }
     }
 }

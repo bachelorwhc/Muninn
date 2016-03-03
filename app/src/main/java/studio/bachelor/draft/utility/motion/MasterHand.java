@@ -1,8 +1,10 @@
 package studio.bachelor.draft.utility.motion;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 import studio.bachelor.draft.Draft;
@@ -17,13 +19,17 @@ import studio.bachelor.draft.utility.Position;
 public class MasterHand implements
         View.OnTouchListener,
         GestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener {
+        GestureDetector.OnDoubleTapListener,
+        ScaleGestureDetector.OnScaleGestureListener {
     private static final MotionHandler handler = MotionHandler.getInstance();
     private static final DraftDirector director = DraftDirector.instance;
-    public final GestureDetector gestureDetector;
+    private final GestureDetector gestureDetector;
+    private final ScaleGestureDetector scaleGestureDetector;
+
 
     public MasterHand(Context context) {
         gestureDetector = new GestureDetector(context, this);
+        scaleGestureDetector = new ScaleGestureDetector(context, this);
     }
 
     private void postMotion(MotionHandler.Motion motion, MotionEvent event1, MotionEvent event2) {
@@ -44,6 +50,16 @@ public class MasterHand implements
         handler.postMotion(motion, tool, marker, position_first, position_second);
     }
 
+    private void postMotion(MotionHandler.Motion motion, Position position_first, Position position_second) {
+        Toolbox.Tool tool = null;
+        Marker marker = null;
+        if(position_first != null) {
+            tool = director.getNearestTool(position_first);
+            marker = director.getNearestMarker(position_first);
+        }
+        handler.postMotion(motion, tool, marker, position_first, position_second);
+    }
+
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
@@ -52,6 +68,7 @@ public class MasterHand implements
                 break;
         }
         gestureDetector.onTouchEvent(event);
+        scaleGestureDetector.onTouchEvent(event);
         return true;
     }
 
@@ -68,7 +85,7 @@ public class MasterHand implements
 
     @Override
     public void onLongPress(MotionEvent event) {
-
+        postMotion(MotionHandler.Motion.LONG_PRESS, event, null);
     }
 
     @Override
@@ -78,8 +95,7 @@ public class MasterHand implements
 
     @Override
     public void onShowPress(MotionEvent event) {
-        Position position = new Position(event);
-
+        postMotion(MotionHandler.Motion.LONG_PRESS_READY, event, null);
     }
 
     @Override
@@ -90,14 +106,13 @@ public class MasterHand implements
 
     @Override
     public boolean onDoubleTap(MotionEvent event) {
-        Position position = new Position(event);
-
+        postMotion(MotionHandler.Motion.DOUBLE_TAP, event, null);
         return true;
     }
 
     @Override
     public boolean onDoubleTapEvent(MotionEvent event) {
-        postMotion(MotionHandler.Motion.DOUBLE_TAP, event, null);
+
         return true;
     }
 
@@ -105,5 +120,40 @@ public class MasterHand implements
     public boolean onSingleTapConfirmed(MotionEvent event) {
         postMotion(MotionHandler.Motion.SINGLE_TAP, event, null);
         return true;
+    }
+
+    private Position getFocusPosition(ScaleGestureDetector detector) {
+        float x = detector.getCurrentSpanX();
+        float y = detector.getCurrentSpanX();
+        return new Position(x, y);
+    }
+
+    @Override
+    public boolean onScale(ScaleGestureDetector detector)
+    {
+        float scale = detector.getScaleFactor();
+        Position position = getFocusPosition(detector);
+        if(scale > 1.0) {
+            postMotion(MotionHandler.Motion.PINCH_IN, position, null);
+            Log.d("Motion", "PINCH_IN");
+        }
+        else {
+            postMotion(MotionHandler.Motion.PINCH_OUT, position, null);
+            Log.d("Motion", "PINCH_OUT");
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onScaleBegin(ScaleGestureDetector detector)
+    {
+
+        return true;
+    }
+
+    @Override
+    public void onScaleEnd(ScaleGestureDetector detector)
+    {
+
     }
 }
