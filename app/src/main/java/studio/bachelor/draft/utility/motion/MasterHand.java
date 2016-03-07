@@ -136,10 +136,10 @@ public class MasterHand implements
     {
         float scale = detector.getScaleFactor();
         Position position = getFocusPosition(detector);
-        if(scale > 1.0) {
+        if(scale > 1.2) {
             postMotion(MotionHandler.Motion.PINCH_IN, position, null);
         }
-        else {
+        else if(scale < 0.8) {
             postMotion(MotionHandler.Motion.PINCH_OUT, position, null);
         }
         return false;
