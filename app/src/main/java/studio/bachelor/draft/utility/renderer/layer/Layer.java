@@ -13,9 +13,9 @@ public class Layer{
     private final Position center;
     public final MarkerManager markerManager = new MarkerManager();
 
-    public static Position getPositionOfLayer(Layer layer, Position position) {
-        double x = position.x - layer.center.x;
-        double y = position.y - layer.center.y;
+    public Position getPositionOfLayer(Position position) {
+        double x = position.x - center.x;
+        double y = position.y - center.y;
         return new Position(x, y);
     }
 
@@ -30,8 +30,12 @@ public class Layer{
         this.width = width;
         center.set(new Position(this.width / 2, this.height / 2));
         for(Marker marker : markerManager.markers) {
-            marker.position.set(getPositionOfLayer(this, marker.position));
+            marker.position.set(getPositionOfLayer(marker.position));
         }
+    }
+
+    public Position getCenter() {
+        return center;
     }
 
     public float getWidth() {

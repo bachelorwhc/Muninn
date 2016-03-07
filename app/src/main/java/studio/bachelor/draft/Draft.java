@@ -9,6 +9,7 @@ import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.marker.MarkerManager;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.renderer.layer.Layer;
+import studio.bachelor.draft.utility.renderer.layer.ScaleLayer;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -16,7 +17,7 @@ import studio.bachelor.draft.utility.renderer.layer.Layer;
 public class Draft{
     private static final DraftDirector director = DraftDirector.instance;
     private static final Draft instance = new Draft();
-    public final Layer layer = new Layer(0, 0);
+    public final ScaleLayer layer = new ScaleLayer(0, 0);
 
     public static Draft getInstance() {
         return instance;
@@ -40,8 +41,15 @@ public class Draft{
         layer.markerManager.removeMarker(marker);
     }
 
-    public Position getDraftPosition(Position position) {
-        return Layer.getPositionOfLayer(layer, position);
+    public void moveMarker(Marker marker, Position position) {
+        if(marker != null) {
+            position = getDraftPosition(position);
+            marker.move(position);
+        }
+    }
+
+    private Position getDraftPosition(Position position) {
+        return layer.getPositionOfLayer(position);
     }
 
     public Marker getNearestMarker(Position position) {

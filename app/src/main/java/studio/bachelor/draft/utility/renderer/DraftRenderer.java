@@ -33,10 +33,10 @@ public class DraftRenderer implements Renderable {
     }
 
     public void onDraw(Canvas canvas) {
-        if(birdview != null)
-            canvas.drawBitmap(birdview, 0, 0, paint);
         float tx = draft.layer.getWidth() / 2;
         float ty = draft.layer.getHeight() / 2;
         canvas.translate(tx, ty);
+        if(birdview != null)
+            canvas.drawBitmap(birdview, -birdview.getWidth() / 2, -birdview.getHeight() / 2, paint);
     }
 }

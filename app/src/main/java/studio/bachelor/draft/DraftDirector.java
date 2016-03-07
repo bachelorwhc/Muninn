@@ -190,8 +190,7 @@ public class DraftDirector {
 
     public void moveHoldMarker(Position position) {
         if(this.markerHold != null) {
-            position = draft.getDraftPosition(position);
-            markerHold.move(position);
+            draft.moveMarker(markerHold, position);
         }
     }
 }
