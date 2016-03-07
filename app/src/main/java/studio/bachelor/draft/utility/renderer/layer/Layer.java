@@ -13,7 +13,7 @@ public class Layer{
     private final Position center;
     public final MarkerManager markerManager = new MarkerManager();
 
-    public Position getPositionOfLayer(Position position) {
+    public Position getPositionOfLayer(final Position position) {
         double x = position.x - center.x;
         double y = position.y - center.y;
         return new Position(x, y);
