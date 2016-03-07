@@ -40,7 +40,7 @@ public class Draft{
         layer.markerManager.removeMarker(marker);
     }
 
-    private Position getDraftPosition(Position position) {
+    public Position getDraftPosition(Position position) {
         return Layer.getPositionOfLayer(layer, position);
     }
 

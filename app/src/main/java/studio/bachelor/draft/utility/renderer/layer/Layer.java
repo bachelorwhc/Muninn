@@ -33,4 +33,12 @@ public class Layer{
             marker.position.set(getPositionOfLayer(this, marker.position));
         }
     }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
 }

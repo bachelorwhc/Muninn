@@ -9,12 +9,14 @@ import java.util.List;
 
 import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.utility.Renderable;
+import studio.bachelor.draft.utility.renderer.layer.Layer;
 
 /**
  * Created by BACHELOR on 2016/02/24.
  */
 public class MarkerRenderer implements Renderable {
     private Marker reference;
+    //private Layer layer;
     public final List<Renderable> primitives = new LinkedList<Renderable>();
     private final Paint paint = new Paint();
 

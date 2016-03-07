@@ -121,15 +121,18 @@ public class DraftDirector {
     }
 
     public void render(Canvas canvas) {
-        draftRenderer.onDraw(canvas);
-
+        canvas.save();
         // TODO: 縮放機制
-        if(toolboxRenderer != null)
-            toolboxRenderer.onDraw(canvas);
+        draftRenderer.onDraw(canvas);
 
         for (Renderable renderable : rendererManager.renderObjects) {
             renderable.onDraw(canvas);
         }
+
+        canvas.restore();
+
+        if(toolboxRenderer != null)
+            toolboxRenderer.onDraw(canvas);
 
         if(tool != null) {
             Bitmap bitmap = ToolboxRenderer.getToolIcon(tool);
@@ -186,8 +189,9 @@ public class DraftDirector {
     }
 
     public void moveHoldMarker(Position position) {
-        if(this.markerHold != null)
-            this.markerHold.move(position);
+        if(this.markerHold != null) {
+            position = draft.getDraftPosition(position);
+            markerHold.move(position);
+        }
     }
-
 }
