@@ -138,11 +138,9 @@ public class MasterHand implements
         Position position = getFocusPosition(detector);
         if(scale > 1.0) {
             postMotion(MotionHandler.Motion.PINCH_IN, position, null);
-            Log.d("Motion", "PINCH_IN");
         }
         else {
             postMotion(MotionHandler.Motion.PINCH_OUT, position, null);
-            Log.d("Motion", "PINCH_OUT");
         }
         return false;
     }

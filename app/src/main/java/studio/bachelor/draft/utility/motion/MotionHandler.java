@@ -61,6 +61,12 @@ public class MotionHandler {
                 if(tool != null)
                     director.selectTool(tool);
                 break;
+            case PINCH_IN:
+                director.zoomDraft(position_first, 0.05f);
+                break;
+            case PINCH_OUT:
+                director.zoomDraft(position_first, -0.05f);
+                break;
         }
     }
 }

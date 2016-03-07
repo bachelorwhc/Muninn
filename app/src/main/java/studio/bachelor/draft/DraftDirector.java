@@ -193,4 +193,8 @@ public class DraftDirector {
             draft.moveMarker(markerHold, position);
         }
     }
+
+    public void zoomDraft(Position center, float scale_offset) {
+        this.draft.layer.scale(scale_offset);
+    }
 }

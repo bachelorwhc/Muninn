@@ -35,7 +35,9 @@ public class DraftRenderer implements Renderable {
     public void onDraw(Canvas canvas) {
         float tx = draft.layer.getWidth() / 2;
         float ty = draft.layer.getHeight() / 2;
+        float scale = draft.layer.getScale();
         canvas.translate(tx, ty);
+        canvas.scale(scale, scale);
         if(birdview != null)
             canvas.drawBitmap(birdview, -birdview.getWidth() / 2, -birdview.getHeight() / 2, paint);
     }
