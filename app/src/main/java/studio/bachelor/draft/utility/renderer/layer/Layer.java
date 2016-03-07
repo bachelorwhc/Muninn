@@ -11,6 +11,7 @@ public class Layer{
     private float width;
     private float height;
     private final Position center;
+    private final Position centerOffset = new Position();
     public final MarkerManager markerManager = new MarkerManager();
 
     public Position getPositionOfLayer(final Position position) {
@@ -44,5 +45,13 @@ public class Layer{
 
     public float getHeight() {
         return height;
+    }
+
+    public Position getCenterOffset() {
+        return centerOffset;
+    }
+
+    public Position getTranslate() {
+        return new Position(center.x + centerOffset.x, center.y + centerOffset.y);
     }
 }

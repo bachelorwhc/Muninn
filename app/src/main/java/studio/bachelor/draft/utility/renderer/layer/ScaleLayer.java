@@ -15,8 +15,9 @@ public class ScaleLayer extends Layer {
     @Override
     public Position getPositionOfLayer(final Position position) {
         Position original = super.getPositionOfLayer(position);
-        double x = original.x / currentScale;
-        double y = original.y / currentScale;
+        Position shift = super.getCenterOffset();
+        double x = (original.x - shift.x) / currentScale;
+        double y = (original.y - shift.y) / currentScale;
         return new Position(x, y);
     }
 

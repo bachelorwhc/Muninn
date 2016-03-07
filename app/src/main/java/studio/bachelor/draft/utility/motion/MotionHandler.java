@@ -65,7 +65,7 @@ public class MotionHandler {
                 director.zoomDraft(position_first, 0.05f);
                 break;
             case PINCH_OUT:
-                director.zoomDraft(position_first, -0.05f);
+                director.zoomDraft(position_first, -0.025f);
                 break;
         }
     }
