@@ -14,9 +14,9 @@ public class Layer{
     private final Position centerOffset = new Position();
     public final MarkerManager markerManager = new MarkerManager();
 
-    public Position getPositionOfLayer(final Position position) {
-        double x = position.x - center.x;
-        double y = position.y - center.y;
+    public Position getPositionOfLayer(final Position screen_position) {
+        double x = screen_position.x - center.x;
+        double y = screen_position.y - center.y;
         return new Position(x, y);
     }
 
@@ -53,5 +53,12 @@ public class Layer{
 
     public Position getTranslate() {
         return new Position(center.x + centerOffset.x, center.y + centerOffset.y);
+    }
+
+    public void moveLayer(Position offset) {
+        double x = offset.x + centerOffset.x;
+        double y = offset.y + centerOffset.y;
+        Position stack_offset = new Position(x, y);
+        centerOffset.set(stack_offset);
     }
 }

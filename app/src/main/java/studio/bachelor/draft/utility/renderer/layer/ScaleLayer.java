@@ -13,8 +13,8 @@ public class ScaleLayer extends Layer {
     }
 
     @Override
-    public Position getPositionOfLayer(final Position position) {
-        Position original = super.getPositionOfLayer(position);
+    public Position getPositionOfLayer(final Position screen_position) {
+        Position original = super.getPositionOfLayer(screen_position);
         Position shift = super.getCenterOffset();
         double x = (original.x - shift.x) / currentScale;
         double y = (original.y - shift.y) / currentScale;

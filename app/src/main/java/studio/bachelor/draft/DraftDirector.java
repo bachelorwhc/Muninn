@@ -194,7 +194,11 @@ public class DraftDirector {
         }
     }
 
-    public void zoomDraft(Position center, float scale_offset) {
+    public void zoomDraft(float scale_offset) {
         this.draft.layer.scale(scale_offset);
+    }
+
+    public void moveDraft(Position offset) {
+        this.draft.layer.moveLayer(offset);
     }
 }

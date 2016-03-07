@@ -30,7 +30,8 @@ public class MotionHandler {
         MOVE,
         PINCH_IN,
         PINCH_OUT,
-        UP
+        UP,
+        FlING
     }
 
     public void postMotion(Motion motion, Toolbox.Tool tool, Marker marker, Position position_first, Position position_second) {
@@ -62,10 +63,16 @@ public class MotionHandler {
                     director.selectTool(tool);
                 break;
             case PINCH_IN:
-                director.zoomDraft(position_first, 0.05f);
+                director.zoomDraft(0.05f);
                 break;
             case PINCH_OUT:
-                director.zoomDraft(position_first, -0.025f);
+                director.zoomDraft(-0.025f);
+                break;
+            case FlING:
+                double x = position_second.x - position_first.x;
+                double y = position_second.y - position_first.y;
+                Position offset = new Position(x, y);
+                director.moveDraft(offset);
                 break;
         }
     }
