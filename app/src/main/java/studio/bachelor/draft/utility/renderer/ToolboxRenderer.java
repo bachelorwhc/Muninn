@@ -30,6 +30,7 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
     static {
         iconMap.put(Toolbox.Tool.DELETER, createBitmapByType(R.drawable.ic_delete_forever_black_48dp));
         iconMap.put(Toolbox.Tool.MAKER_TYPE_LINK, createBitmapByType(R.drawable.ic_place_black_48dp));
+        iconMap.put(Toolbox.Tool.MAKER_TYPE_ANCHOR, createBitmapByType(R.drawable.ic_rate_review_black_48dp));
     }
 
     static public Bitmap getToolIcon(Toolbox.Tool tool) {

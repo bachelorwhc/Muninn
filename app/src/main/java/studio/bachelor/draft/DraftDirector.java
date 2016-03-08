@@ -6,15 +6,22 @@ import android.graphics.Paint;
 import android.net.Uri;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import studio.bachelor.draft.marker.AnchorMarker;
 import studio.bachelor.draft.marker.LinkMarker;
 import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.marker.MarkerManager;
+import studio.bachelor.draft.marker.MeasureMarker;
 import studio.bachelor.draft.marker.builder.ControlMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
+import studio.bachelor.draft.marker.builder.MeasureMarkerBuilder;
 import studio.bachelor.draft.toolbox.Toolbox;
+import studio.bachelor.draft.utility.MapString;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
 import studio.bachelor.draft.utility.renderer.DraftRenderer;
@@ -34,7 +41,7 @@ public class DraftDirector {
     private Map<Object, Renderable> renderableMap = new HashMap<Object, Renderable>();
     private final Toolbox toolbox = Toolbox.getInstance();
     private ToolboxRenderer toolboxRenderer;
-    private Type markerType = LinkMarker.class;
+    private Type markerType = MeasureMarker.class;
     private Marker markerHold;
     private Marker markerSelecting;
     private Marker markerSelected;
@@ -65,13 +72,13 @@ public class DraftDirector {
     }
 
     public void addMarker(Position position) {
-        if(markerType == LinkMarker.class) {
+        if(markerType == MeasureMarker.class) {
             //  建立LinkMaker與ControlMaker
             ControlMarkerBuilder cb = new ControlMarkerBuilder();
             Marker linked = cb.
                     setPosition(new Position(position.x - 100, position.y)).
                     build();
-            LinkMarkerBuilder lb = new LinkMarkerBuilder();
+            LinkMarkerBuilder lb = new MeasureMarkerBuilder();
             Marker marker = lb.
                     setPosition(position).
                     setLink(linked).
@@ -80,12 +87,16 @@ public class DraftDirector {
             draft.addMarker(marker);
             draft.addMarker(linked);
 
+            Position[] positions = {marker.position, linked.position};
+            List<Position> position_list = new ArrayList<Position>(Arrays.asList(positions));
+
             //  建立MakerRenderer
             MarkerRendererBuilder mrb = new MarkerRendererBuilder();
             Renderable marker_renderer = mrb.
                     setLinkLine((LinkMarker) marker).
                     setReference(marker).
                     setPoint(marker).
+                    setText(new MapString((MeasureMarker) marker), position_list).
                     build();
 
             Renderable link_renderer = mrb.
@@ -98,6 +109,9 @@ public class DraftDirector {
             //  建立對應關係
             renderableMap.put(marker, marker_renderer);
             renderableMap.put(linked, link_renderer);
+        }
+        else if(markerType == AnchorMarker.class) {
+
         }
     }
 
@@ -137,11 +151,18 @@ public class DraftDirector {
             Bitmap bitmap = ToolboxRenderer.getToolIcon(tool);
             canvas.drawBitmap(bitmap, canvas.getWidth() - bitmap.getWidth(), canvas.getHeight() - bitmap.getHeight(), paint);
         }
-        //canvas.drawText("DEBUG INFO\n TOOL:" + , canvas.getWidth()/2, canvas.getHeight()-TEXT_PADDING, textPaint);
     }
 
     public void selectTool(Toolbox.Tool tool) {
         this.tool = tool;
+        switch (tool) {
+            case MAKER_TYPE_LINK:
+                this.markerType = MeasureMarker.class;
+                break;
+            case MAKER_TYPE_ANCHOR:
+                this.markerType = AnchorMarker.class;
+                break;
+        }
     }
 
     public void deselectTool() {

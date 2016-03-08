@@ -13,7 +13,7 @@ public class AnchorMarker extends LinkMarker implements MapStringSupport {
 
     private AnchorMarker() {
         super();
-        link = new ControlMarker(new Position(position.x + 500, position.y + 500));
+        this.link = new ControlMarker();
     }
 
     @Override
