@@ -10,26 +10,35 @@ import studio.bachelor.draft.utility.Position;
  * <code>MarkerManager</code>管理所有<code>Marker</code>物件。
  */
 public class MarkerManager {
+    /**
+     * 儲存所有Marker的List，
+     */
     public final List<Marker> markers = new LinkedList<Marker>();
-    //private static final DraftDirector director = DraftDirector.instance;
-    //private static final MarkerManager instance = new MarkerManager();
-    /*public static MarkerManager getInstance() { return instance; }*/
 
     public MarkerManager() {
 
     }
 
+    /**
+     *將Marker將入<code>markers</code>中。
+     * @param marker 欲增加之Marker。
+     */
     public void addMarker(final Marker marker) {
         if(markers != null)
             markers.add(marker);
     }
 
+    /**
+     * 自<code>markers</code>中移除Marker
+     * @param marker 欲移除之Marker。
+     */
     public void removeMarker(final Marker marker) {
         if(markers != null)
             markers.remove(marker);
     }
 
     /**
+     * 取得距離<code>position</code>最近的Marker。
      * @param threshold 與<code>position</code>距離的最大值，唯有低於此值的<code>Marker</code>會被<code>return</code>。
      * @return 與<code>position</code>距離最近的<code>Marker</code>，若不存在滿足條件的<code>Marker</code>則為<code>null</code>。
      */

@@ -11,11 +11,14 @@ import studio.bachelor.draft.utility.Position;
  * <code>Marker</code>，作為<code>Draft</code>上所顯示的標記。
  */
 public abstract class Marker implements Lockable, Touchable, Selectable, Removable {
-    /** 自 0.2.0 起，<code>position</code>將以<code>Draft</code>中心為基準點。 */
+    /** <code>position</code>將以<code>Draft</code>中心為基準點。 */
     public final Position position = new Position();
     protected static DraftDirector director = DraftDirector.instance;
     private boolean locked = false;
-    State selectionState = State.UNSELECTED;
+    /**
+     * 目前的選取狀態({@link studio.bachelor.draft.utility.Selectable.State})，預設為未選取。
+     */
+    private State selectionState = State.UNSELECTED;
 
     public Marker() {
 
@@ -26,20 +29,35 @@ public abstract class Marker implements Lockable, Touchable, Selectable, Removab
         this.position.y = position.y;
     }
 
+    /**
+     * 自{@link studio.bachelor.draft.marker.MarkerManager}移除自身instance。
+     */
     public void remove() {
         director.removeMarker(this);
     }
 
+    /**
+     * 將<code>Marker</code>移動到特定座標。
+     * @param position 欲設定之座標。
+     */
     public void move(Position position) {
         if(locked)
             return;
         this.position.set(position);
     }
 
+    /**
+     * 確認該座標是否能夠觸碰到<code>Marker</code>。
+     * @param position 測試座標。
+     * @param threshold 觸碰<code>Marker</code>的門檻值，距離必須低於本數值才會回傳為<code>True</code>。
+     */
     public boolean canBeTouched(Position position, double threshold) {
         return getDistanceTo(position) < threshold;
     }
 
+    /**
+     * 取得<code>Marker</code>與座標之距離。
+     */
     public double getDistanceTo(Position position) {
         return this.position.getDistanceTo(position);
     }
@@ -58,18 +76,30 @@ public abstract class Marker implements Lockable, Touchable, Selectable, Removab
         return locked;
     }
 
+    /**
+     * 取得目前<code>Marker</code>的選取狀態。
+     */
     public State getSelectionState() {
         return selectionState;
     }
 
+    /**
+     * 選擇本<code>Marker</code>。
+     */
     public void select() {
         selectionState = State.SELECTED;
     }
 
+    /**
+     * 解除本<code>Marker</code>的選取。
+     */
     public void deselect() {
         selectionState = State.UNSELECTED;
     }
 
+    /**
+     * 正在嘗試選取本Marker，但尚未選取成功。
+     */
     public void selecting() {
         selectionState = State.SELECTING;
     }
