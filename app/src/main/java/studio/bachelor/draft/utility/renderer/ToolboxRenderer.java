@@ -19,7 +19,6 @@ import studio.bachelor.muninn.R;
  * Created by BACHELOR on 2016/02/24.
  */
 public class ToolboxRenderer implements TouchableGroup, Renderable {
-    // TODO: 效能優化
     public final Toolbox toolbox;
     public final Paint paint = new Paint();
     public final Position upperLeftCorner;

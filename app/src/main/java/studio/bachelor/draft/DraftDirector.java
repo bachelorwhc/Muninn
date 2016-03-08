@@ -122,7 +122,6 @@ public class DraftDirector {
 
     public void render(Canvas canvas) {
         canvas.save();
-        // TODO: 縮放機制
         draftRenderer.onDraw(canvas);
 
         for (Renderable renderable : rendererManager.renderObjects) {

@@ -34,6 +34,7 @@ public class MarkerRenderer implements Renderable {
     }
 
     public void onDraw(Canvas canvas) {
+        reference.update();
         if(reference != null) {
             switch (reference.getSelectionState()) {
                 case SELECTING:

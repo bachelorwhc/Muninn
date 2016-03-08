@@ -1,11 +1,16 @@
 package studio.bachelor.draft.utility.renderer;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 import studio.bachelor.draft.DraftDirector;
 import studio.bachelor.draft.marker.AnchorMarker;
 import studio.bachelor.draft.marker.LinkMarker;
+import studio.bachelor.draft.utility.MapString;
+import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
 import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
 
@@ -22,21 +27,7 @@ public class RendererManager {
     public final List<Renderable> renderObjects = new LinkedList<Renderable>();
 
     private RendererManager() {
-        AnchorMarker anchor = AnchorMarker.getInstance();
 
-        MarkerRendererBuilder mrb = new MarkerRendererBuilder();
-        Renderable marker_renderer = mrb.
-                setLinkLine((AnchorMarker) anchor).
-                setReference(anchor).
-                setPoint(anchor).
-                build();
-
-        Renderable link_renderer = mrb.
-                setReference(anchor.getLink()).
-                build();
-
-        addRenderer(marker_renderer);
-        addRenderer(link_renderer);
     }
 
     public void addRenderer(final Renderable render_object) {

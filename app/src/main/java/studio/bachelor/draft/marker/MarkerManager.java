@@ -18,11 +18,7 @@ public class MarkerManager {
     public final List<Marker> markers = new LinkedList<Marker>();
 
     public MarkerManager() {
-        // TODO: remove this after AnchorMarker complete.
-        AnchorMarker anchor = AnchorMarker.getInstance();
 
-        addMarker(anchor);
-        addMarker(anchor.link);
     }
 
     /**

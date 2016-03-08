@@ -29,6 +29,10 @@ public abstract class Marker implements Lockable, Touchable, Selectable, Removab
         this.position.y = position.y;
     }
 
+    public void update() {
+        return;
+    }
+
     /**
      * 自{@link studio.bachelor.draft.marker.MarkerManager}移除自身instance。
      */
