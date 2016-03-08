@@ -1,10 +1,15 @@
 package studio.bachelor.draft;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
+import android.widget.EditText;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -22,6 +27,7 @@ import studio.bachelor.draft.marker.builder.ControlMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
 import studio.bachelor.draft.marker.builder.MeasureMarkerBuilder;
 import studio.bachelor.draft.toolbox.Toolbox;
+import studio.bachelor.draft.utility.Builder;
 import studio.bachelor.draft.utility.MapString;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
@@ -29,6 +35,7 @@ import studio.bachelor.draft.utility.renderer.DraftRenderer;
 import studio.bachelor.draft.utility.renderer.RendererManager;
 import studio.bachelor.draft.utility.renderer.ToolboxRenderer;
 import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
+import studio.bachelor.muninn.Muninn;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -37,7 +44,6 @@ public class DraftDirector {
     public static final DraftDirector instance = new DraftDirector();
     private Draft draft;
     private DraftRenderer draftRenderer;
-    //private MarkerManager markerManager;
     private RendererManager rendererManager;
     private Map<Object, Renderable> renderableMap = new HashMap<Object, Renderable>();
     private final Toolbox toolbox = Toolbox.getInstance();
@@ -48,16 +54,20 @@ public class DraftDirector {
     private Marker markerSelected;
     private Toolbox.Tool tool;
     private final Paint paint = new Paint();
+    private Context context;
 
     {
         draft = Draft.getInstance();
         draftRenderer = new DraftRenderer(draft);
-        //markerManager = markerManager.getInstance();
         rendererManager = RendererManager.getInstance();
     }
 
     private DraftDirector() {
 
+    }
+
+    public void setViewContext(Context context) {
+        this.context = context;
     }
 
     public void setBirdviewImageByUri(Uri uri) {
@@ -113,13 +123,30 @@ public class DraftDirector {
         }
         else if(markerType == AnchorMarker.class) {
             //  取得AnchorMarker與ControlMaker
-            Marker marker = AnchorMarker.getInstance();
+            final Marker marker = AnchorMarker.getInstance();
             Marker linked = AnchorMarker.getInstance().getLink();
 
             if(renderableMap.containsKey(marker) && renderableMap.containsKey(linked)) {
                 rendererManager.removeRenderer(renderableMap.get(marker));
                 rendererManager.removeRenderer(renderableMap.get(linked));
             }
+
+            final EditText edit_text = new EditText(context);
+            edit_text.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+            AlertDialog.Builder dialog_builder = new AlertDialog.Builder(context);
+            dialog_builder
+                    .setTitle("真實距離")
+                    .setView(edit_text)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String distance_str = edit_text.getText().toString();
+                            if (distance_str.isEmpty())
+                                return;
+                            ((AnchorMarker)marker).setRealDistance(Double.parseDouble(distance_str));
+                        }
+                    })
+                    .show();
 
             marker.position.set(position);
             linked.position.set(new Position(position.x + 50, position.y + 50));

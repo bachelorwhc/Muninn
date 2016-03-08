@@ -26,6 +26,7 @@ public class DraftView extends View{
     }
 
     private void initializeMasterHand(Context context) {
+        director.setViewContext(context);
         masterHand = new MasterHand(context);
         setOnTouchListener(masterHand);
         setLongClickable(true);

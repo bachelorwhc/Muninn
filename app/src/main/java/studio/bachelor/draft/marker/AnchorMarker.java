@@ -24,4 +24,8 @@ public class AnchorMarker extends LinkMarker implements MapStringSupport {
     public double getScale() {
         return realDistance / position.getDistanceTo(this.link.position);
     }
+
+    public void setRealDistance(double real_distance) {
+        this.realDistance = real_distance > 0.0 ? real_distance : 0.0;
+    }
 }
