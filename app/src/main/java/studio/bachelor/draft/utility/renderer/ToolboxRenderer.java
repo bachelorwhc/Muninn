@@ -59,7 +59,7 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
         double min_y = upperLeftCorner.y;
         double max_x = upperLeftCorner.x + width;
         double max_y = upperLeftCorner.y + height;
-        if (position.x >= min_x && position.x <= max_x && position.y >= min_y && position.y <= max_x)
+        if (position.x >= min_x && position.x <= max_x && position.y >= min_y && position.y <= max_y)
             return true;
         else
             return false;

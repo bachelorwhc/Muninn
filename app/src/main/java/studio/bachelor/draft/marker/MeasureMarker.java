@@ -22,6 +22,14 @@ public class MeasureMarker extends LinkMarker implements MapStringSupport {
         return String.valueOf(distance);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void remove() {
+        super.remove();
+    }
+
     @Override
     public void update() {
         super.update();

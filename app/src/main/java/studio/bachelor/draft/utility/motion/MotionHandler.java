@@ -41,7 +41,7 @@ public class MotionHandler {
                 break;
             case LONG_PRESS:
                 if(director.getTool() == Toolbox.Tool.DELETER) {
-                    director.removeMarker(marker);
+                    marker.remove();
                 }
                 else {
                     director.selectMarker();

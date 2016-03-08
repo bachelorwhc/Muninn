@@ -26,7 +26,7 @@ public class MarkerManager {
      * @param marker 欲增加之Marker。
      */
     public void addMarker(final Marker marker) {
-        if(markers != null)
+        if(marker != null && !markers.contains(marker))
             markers.add(marker);
     }
 
@@ -35,7 +35,7 @@ public class MarkerManager {
      * @param marker 欲移除之Marker。
      */
     public void removeMarker(final Marker marker) {
-        if(markers != null)
+        if(marker != null)
             markers.remove(marker);
     }
 

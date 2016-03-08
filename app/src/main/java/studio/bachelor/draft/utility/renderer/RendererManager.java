@@ -31,7 +31,7 @@ public class RendererManager {
     }
 
     public void addRenderer(final Renderable render_object) {
-        if(render_object != null)
+        if(render_object != null && !renderObjects.contains(render_object))
             renderObjects.add(render_object);
     }
 

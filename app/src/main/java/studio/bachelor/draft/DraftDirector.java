@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.util.Log;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -111,7 +112,45 @@ public class DraftDirector {
             renderableMap.put(linked, link_renderer);
         }
         else if(markerType == AnchorMarker.class) {
+            //  取得AnchorMarker與ControlMaker
+            Marker marker = AnchorMarker.getInstance();
+            Marker linked = AnchorMarker.getInstance().getLink();
 
+            if(renderableMap.containsKey(marker) && renderableMap.containsKey(linked)) {
+                rendererManager.removeRenderer(renderableMap.get(marker));
+                rendererManager.removeRenderer(renderableMap.get(linked));
+            }
+
+            marker.position.set(position);
+            linked.position.set(new Position(position.x + 50, position.y + 50));
+
+            draft.addMarker(marker);
+            draft.addMarker(linked);
+            Log.d("MARKER", "MARKER NUMBER:" + draft.layer.markerManager.markers.size());
+
+            Position[] positions = {marker.position, linked.position};
+            List<Position> position_list = new ArrayList<Position>(Arrays.asList(positions));
+
+            //  建立MakerRenderer
+            MarkerRendererBuilder mrb = new MarkerRendererBuilder();
+            Renderable marker_renderer = mrb.
+                    setLinkLine((LinkMarker) marker).
+                    setReference(marker).
+                    setPoint(marker).
+                    setText(new MapString((AnchorMarker) marker), position_list).
+                    build();
+
+            Renderable link_renderer = mrb.
+                    setReference(linked).
+                    build();
+
+            rendererManager.addRenderer(marker_renderer);
+            rendererManager.addRenderer(link_renderer);
+            Log.d("MARKER", "RENDERER NUMBER:" + rendererManager.renderObjects.size());
+
+            //  建立對應關係
+            renderableMap.put(marker, marker_renderer);
+            renderableMap.put(linked, link_renderer);
         }
     }
 
