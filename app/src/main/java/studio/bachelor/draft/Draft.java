@@ -18,6 +18,7 @@ public class Draft{
     private static final DraftDirector director = DraftDirector.instance;
     private static final Draft instance = new Draft();
     public final ScaleLayer layer = new ScaleLayer(0, 0);
+    public double scale = 1.0;
 
     public static Draft getInstance() {
         return instance;
@@ -55,5 +56,9 @@ public class Draft{
     public Marker getNearestMarker(Position position) {
         Position draft_position = getDraftPosition(position);
         return layer.markerManager.getNearestMarker(draft_position, 64);
+    }
+
+    public void setScale(double scale) {
+        this.scale = scale;
     }
 }

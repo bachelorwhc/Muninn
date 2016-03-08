@@ -9,7 +9,7 @@ public class LinkMarker extends Marker {
     /**
      * 連結的{@link studio.bachelor.draft.marker.Marker}。
      */
-    Marker link;
+    protected Marker link;
 
     public LinkMarker() {
         super();
