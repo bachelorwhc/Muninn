@@ -19,11 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 import studio.bachelor.draft.marker.AnchorMarker;
+import studio.bachelor.draft.marker.LabelMarker;
 import studio.bachelor.draft.marker.LinkMarker;
 import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.marker.MarkerManager;
 import studio.bachelor.draft.marker.MeasureMarker;
 import studio.bachelor.draft.marker.builder.ControlMarkerBuilder;
+import studio.bachelor.draft.marker.builder.LabelMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
 import studio.bachelor.draft.marker.builder.MeasureMarkerBuilder;
 import studio.bachelor.draft.toolbox.Toolbox;
@@ -120,8 +122,7 @@ public class DraftDirector {
             //  建立對應關係
             renderableMap.put(marker, marker_renderer);
             renderableMap.put(linked, link_renderer);
-        }
-        else if(markerType == AnchorMarker.class) {
+        } else if(markerType == AnchorMarker.class) {
             //  取得AnchorMarker與ControlMaker
             final Marker marker = AnchorMarker.getInstance();
             Marker linked = AnchorMarker.getInstance().getLink();
@@ -153,7 +154,6 @@ public class DraftDirector {
 
             draft.addMarker(marker);
             draft.addMarker(linked);
-            Log.d("MARKER", "MARKER NUMBER:" + draft.layer.markerManager.markers.size());
 
             Position[] positions = {marker.position, linked.position};
             List<Position> position_list = new ArrayList<Position>(Arrays.asList(positions));
@@ -173,11 +173,46 @@ public class DraftDirector {
 
             rendererManager.addRenderer(marker_renderer);
             rendererManager.addRenderer(link_renderer);
-            Log.d("MARKER", "RENDERER NUMBER:" + rendererManager.renderObjects.size());
 
             //  建立對應關係
             renderableMap.put(marker, marker_renderer);
             renderableMap.put(linked, link_renderer);
+        } else if(markerType == LabelMarker.class) {
+            LabelMarkerBuilder lb = new LabelMarkerBuilder();
+            final Marker marker = lb.
+                    setPosition(new Position(position.x, position.y)).
+                    build();
+
+            final EditText edit_text = new EditText(context);
+
+            AlertDialog.Builder dialog_builder = new AlertDialog.Builder(context);
+            dialog_builder
+                    .setTitle("標籤資訊")
+                    .setView(edit_text)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            String label_str = edit_text.getText().toString();
+                            if (label_str.isEmpty())
+                                return;
+                            ((LabelMarker)marker).setLabel(label_str);
+                        }
+                    })
+                    .show();
+
+            draft.addMarker(marker);
+
+            //  建立MakerRenderer
+            MarkerRendererBuilder mrb = new MarkerRendererBuilder();
+            Renderable marker_renderer = mrb.
+                    setReference(marker).
+                    setPoint(marker).
+                    setText(new MapString((LabelMarker) marker), marker.position).
+                    build();
+
+            rendererManager.addRenderer(marker_renderer);
+
+            //  建立對應關係
+            renderableMap.put(marker, marker_renderer);
         }
     }
 
@@ -227,6 +262,9 @@ public class DraftDirector {
                 break;
             case MAKER_TYPE_ANCHOR:
                 this.markerType = AnchorMarker.class;
+                break;
+            case MARKER_TYPE_LABEL:
+                this.markerType = LabelMarker.class;
                 break;
         }
     }
