@@ -117,7 +117,7 @@ public class ToolboxRenderer implements TouchableGroup, Renderable {
     private Position createToolPosition(Toolbox.Tool tool, int index) {
         float unit = width / toolbox.tools.size();
         Bitmap bitmap = getToolBitmap(tool);
-        double x = upperLeftCorner.x + index * unit + unit / 2 - bitmap.getWidth() / 2;
+        double x = upperLeftCorner.x + (index + 1f / toolbox.tools.size()) * unit - bitmap.getWidth() / 2;
         double y = upperLeftCorner.y + height / 1.5 - bitmap.getHeight() / 2;
         return new Position(x, y);
     }

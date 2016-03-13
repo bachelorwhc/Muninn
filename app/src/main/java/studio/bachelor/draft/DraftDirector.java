@@ -86,134 +86,107 @@ public class DraftDirector {
 
     public void addMarker(Position position) {
         if(markerType == MeasureMarker.class) {
-            //  建立LinkMaker與ControlMaker
-            ControlMarkerBuilder cb = new ControlMarkerBuilder();
-            Marker linked = cb.
-                    setPosition(new Position(position.x - 100, position.y)).
-                    build();
-            LinkMarkerBuilder lb = new MeasureMarkerBuilder();
-            Marker marker = lb.
-                    setPosition(position).
-                    setLink(linked).
-                    build();
-
-            draft.addMarker(marker);
-            draft.addMarker(linked);
-
-            Position[] positions = {marker.position, linked.position};
-            List<Position> position_list = new ArrayList<Position>(Arrays.asList(positions));
-
-            //  建立MakerRenderer
-            MarkerRendererBuilder mrb = new MarkerRendererBuilder();
-            Renderable marker_renderer = mrb.
-                    setLinkLine((LinkMarker) marker).
-                    setReference(marker).
-                    setPoint(marker).
-                    setText(new MapString((MeasureMarker) marker), position_list).
-                    build();
-
-            Renderable link_renderer = mrb.
-                    setReference(linked).
-                    build();
-
-            rendererManager.addRenderer(marker_renderer);
-            rendererManager.addRenderer(link_renderer);
-
-            //  建立對應關係
-            renderableMap.put(marker, marker_renderer);
-            renderableMap.put(linked, link_renderer);
+            addMeasureMarker(position);
         } else if(markerType == AnchorMarker.class) {
-            //  取得AnchorMarker與ControlMaker
-            final Marker marker = AnchorMarker.getInstance();
-            Marker linked = AnchorMarker.getInstance().getLink();
-
-            if(renderableMap.containsKey(marker) && renderableMap.containsKey(linked)) {
-                rendererManager.removeRenderer(renderableMap.get(marker));
-                rendererManager.removeRenderer(renderableMap.get(linked));
-            }
-
-            final EditText edit_text = new EditText(context);
-            edit_text.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
-            AlertDialog.Builder dialog_builder = new AlertDialog.Builder(context);
-            dialog_builder
-                    .setTitle("真實距離")
-                    .setView(edit_text)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            String distance_str = edit_text.getText().toString();
-                            if (distance_str.isEmpty())
-                                return;
-                            ((AnchorMarker)marker).setRealDistance(Double.parseDouble(distance_str));
-                        }
-                    })
-                    .show();
-
-            marker.position.set(position);
-            linked.position.set(new Position(position.x + 50, position.y + 50));
-
-            draft.addMarker(marker);
-            draft.addMarker(linked);
-
-            Position[] positions = {marker.position, linked.position};
-            List<Position> position_list = new ArrayList<Position>(Arrays.asList(positions));
-
-            //  建立MakerRenderer
-            MarkerRendererBuilder mrb = new MarkerRendererBuilder();
-            Renderable marker_renderer = mrb.
-                    setLinkLine((LinkMarker) marker).
-                    setReference(marker).
-                    setPoint(marker).
-                    setText(new MapString((AnchorMarker) marker), position_list).
-                    build();
-
-            Renderable link_renderer = mrb.
-                    setReference(linked).
-                    build();
-
-            rendererManager.addRenderer(marker_renderer);
-            rendererManager.addRenderer(link_renderer);
-
-            //  建立對應關係
-            renderableMap.put(marker, marker_renderer);
-            renderableMap.put(linked, link_renderer);
+            addAnchorMarker(position);
         } else if(markerType == LabelMarker.class) {
-            LabelMarkerBuilder lb = new LabelMarkerBuilder();
-            final Marker marker = lb.
-                    setPosition(new Position(position.x, position.y)).
-                    build();
-
-            final EditText edit_text = new EditText(context);
-
-            AlertDialog.Builder dialog_builder = new AlertDialog.Builder(context);
-            dialog_builder
-                    .setTitle("標籤資訊")
-                    .setView(edit_text)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            String label_str = edit_text.getText().toString();
-                            if (label_str.isEmpty())
-                                return;
-                            ((LabelMarker)marker).setLabel(label_str);
-                        }
-                    })
-                    .show();
-
-            draft.addMarker(marker);
-
-            //  建立MakerRenderer
-            MarkerRendererBuilder mrb = new MarkerRendererBuilder();
-            Renderable marker_renderer = mrb.
-                    setReference(marker).
-                    setPoint(marker).
-                    setText(new MapString((LabelMarker) marker), marker.position).
-                    build();
-
-            rendererManager.addRenderer(marker_renderer);
-
-            //  建立對應關係
-            renderableMap.put(marker, marker_renderer);
+            addLabelMarker(position);
         }
+    }
+
+    private void addLabelMarker(Position position) {
+        LabelMarkerBuilder lb = new LabelMarkerBuilder();
+        final Marker marker = lb.
+                setPosition(new Position(position.x, position.y)).
+                build();
+
+        final EditText edit_text = new EditText(context);
+
+        AlertDialog.Builder dialog_builder = new AlertDialog.Builder(context);
+        dialog_builder
+                .setTitle("標籤資訊")
+                .setView(edit_text)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String label_str = edit_text.getText().toString();
+                        if (label_str.isEmpty())
+                            return;
+                        ((LabelMarker)marker).setLabel(label_str);
+                    }
+                })
+                .show();
+
+        draft.addMarker(marker);
+
+        //  建立MakerRenderer
+        MarkerRendererBuilder mrb = new MarkerRendererBuilder();
+        Renderable marker_renderer = mrb.
+                setReference(marker).
+                setPoint(marker).
+                setText(new MapString((LabelMarker) marker), marker.position).
+                build();
+
+        rendererManager.addRenderer(marker_renderer);
+
+        //  建立對應關係
+        renderableMap.put(marker, marker_renderer);
+    }
+
+    private void addAnchorMarker(Position position) {
+        //  取得AnchorMarker與ControlMaker
+        final Marker marker = AnchorMarker.getInstance();
+        Marker linked = AnchorMarker.getInstance().getLink();
+
+        if(renderableMap.containsKey(marker) && renderableMap.containsKey(linked)) {
+            rendererManager.removeRenderer(renderableMap.get(marker));
+            rendererManager.removeRenderer(renderableMap.get(linked));
+        }
+
+        final EditText edit_text = new EditText(context);
+        edit_text.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        AlertDialog.Builder dialog_builder = new AlertDialog.Builder(context);
+        dialog_builder
+                .setTitle("真實距離")
+                .setView(edit_text)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String distance_str = edit_text.getText().toString();
+                        if (distance_str.isEmpty())
+                            return;
+                        ((AnchorMarker)marker).setRealDistance(Double.parseDouble(distance_str));
+                    }
+                })
+                .show();
+
+        marker.position.set(position);
+        linked.position.set(new Position(position.x + 50, position.y + 50));
+
+        draft.addMarker(marker);
+        draft.addMarker(linked);
+
+        Position[] positions = {marker.position, linked.position};
+        List<Position> position_list = new ArrayList<Position>(Arrays.asList(positions));
+
+        //  建立MakerRenderer
+        MarkerRendererBuilder mrb = new MarkerRendererBuilder();
+        Renderable marker_renderer = mrb.
+                setLinkLine((LinkMarker) marker).
+                setReference(marker).
+                setPoint(marker).
+                setText(new MapString((AnchorMarker) marker), position_list).
+                build();
+
+        Renderable link_renderer = mrb.
+                setReference(linked).
+                build();
+
+        rendererManager.addRenderer(marker_renderer);
+        rendererManager.addRenderer(link_renderer);
+
+        //  建立對應關係
+        renderableMap.put(marker, marker_renderer);
+        renderableMap.put(linked, link_renderer);
     }
 
     public void removeMarker(Marker marker) {
@@ -225,6 +198,45 @@ public class DraftDirector {
             renderableMap.remove(marker);
         }
         draft.removeMarker(marker);
+    }
+
+    private void addMeasureMarker(Position position) {
+        //  建立LinkMaker與ControlMaker
+        ControlMarkerBuilder cb = new ControlMarkerBuilder();
+        Marker linked = cb.
+                setPosition(new Position(position.x - 100, position.y)).
+                build();
+        LinkMarkerBuilder lb = new MeasureMarkerBuilder();
+        Marker marker = lb.
+                setPosition(position).
+                setLink(linked).
+                build();
+
+        draft.addMarker(marker);
+        draft.addMarker(linked);
+
+        Position[] positions = {marker.position, linked.position};
+        List<Position> position_list = new ArrayList<Position>(Arrays.asList(positions));
+
+        //  建立MakerRenderer
+        MarkerRendererBuilder mrb = new MarkerRendererBuilder();
+        Renderable marker_renderer = mrb.
+                setLinkLine((LinkMarker) marker).
+                setReference(marker).
+                setPoint(marker).
+                setText(new MapString((MeasureMarker) marker), position_list).
+                build();
+
+        Renderable link_renderer = mrb.
+                setReference(linked).
+                build();
+
+        rendererManager.addRenderer(marker_renderer);
+        rendererManager.addRenderer(link_renderer);
+
+        //  建立對應關係
+        renderableMap.put(marker, marker_renderer);
+        renderableMap.put(linked, link_renderer);
     }
 
     public Marker getNearestMarker(Position position) {
