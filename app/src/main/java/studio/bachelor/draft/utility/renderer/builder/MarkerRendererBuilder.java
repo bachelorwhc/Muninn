@@ -38,7 +38,6 @@ public class MarkerRendererBuilder extends RendererBuilder {
         MarkerRenderer renderer = (MarkerRenderer)product;
         Point primitive = new Point(marker.position);
         renderer.primitives.add(primitive);
-        primitive.setRadius(3.0f);
         return this;
     }
 
@@ -47,7 +46,6 @@ public class MarkerRendererBuilder extends RendererBuilder {
         MarkerRenderer renderer = (MarkerRenderer)product;
         Line primitive = new Line(marker.position, marker.getLink().position);
         renderer.primitives.add(primitive);
-        primitive.setWidth(3.0f);
         return this;
     }
 

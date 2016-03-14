@@ -1,10 +1,13 @@
 package studio.bachelor.draft.utility.renderer.primitive;
 
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.preference.PreferenceManager;
 
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
+import studio.bachelor.muninn.Muninn;
 
 /**
  * Created by BACHELOR on 2016/03/01.
@@ -16,8 +19,11 @@ public class Line implements Renderable {
     public final Paint paint = new Paint();
 
     {
+        SharedPreferences shared_preferences = PreferenceManager.getDefaultSharedPreferences(Muninn.getContext());
         paint.setAntiAlias(true);
         paint.setStrokeCap(Paint.Cap.ROUND);
+        String value_str = shared_preferences.getString("marker_line", "10.0f");
+        paint.setStrokeWidth(Float.parseFloat(value_str));
     }
 
     public Line() {
