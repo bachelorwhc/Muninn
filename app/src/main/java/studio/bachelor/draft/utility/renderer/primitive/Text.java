@@ -1,26 +1,32 @@
 package studio.bachelor.draft.utility.renderer.primitive;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 
 import studio.bachelor.draft.utility.MapString;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
+import studio.bachelor.muninn.Muninn;
+import studio.bachelor.muninn.R;
 
 /**
  * Created by bachelor on 2016/3/8.
  */
 public class Text implements Renderable {
-    private float width;
-    private float textWidth;
+    private float textSize;
     public final Position position;
     public final Paint paint = new Paint();
     public final String string;
     public final MapString mapString;
 
     {
+        textSize = Muninn.getSizeSetting(R.string.key_marker_text_size, R.string.default_marker_text_size);
+        String color = Muninn.getColorSetting(R.string.key_marker_text_color, R.string.default_marker_text_color);
+        paint.setColor(Color.parseColor(color));
         paint.setAntiAlias(true);
         paint.setStrokeCap(Paint.Cap.ROUND);
+        setTextSize(textSize);
     }
 
     public Text(String string) {
@@ -47,14 +53,9 @@ public class Text implements Renderable {
         mapString = string;
     }
 
-    public void setWidth(float width) {
-        this.width = width;
-        paint.setStrokeWidth(this.width);
-    }
-
-    public void setTextWidth(float width) {
-        this.textWidth = width;
-        paint.setTextSize(this.textWidth);
+    public void setTextSize(float size) {
+        this.textSize = size;
+        paint.setTextSize(this.textSize);
     }
 
     @Override

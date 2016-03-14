@@ -2,12 +2,14 @@ package studio.bachelor.draft.utility.renderer.primitive;
 
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.preference.PreferenceManager;
 
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
 import studio.bachelor.muninn.Muninn;
+import studio.bachelor.muninn.R;
 
 /**
  * Created by BACHELOR on 2016/03/01.
@@ -19,11 +21,12 @@ public class Line implements Renderable {
     public final Paint paint = new Paint();
 
     {
-        SharedPreferences shared_preferences = PreferenceManager.getDefaultSharedPreferences(Muninn.getContext());
+        width = Muninn.getSizeSetting(R.string.key_marker_line_width, R.string.default_marker_line_width);
+        String color = Muninn.getColorSetting(R.string.key_marker_line_color, R.string.default_marker_line_color);
         paint.setAntiAlias(true);
         paint.setStrokeCap(Paint.Cap.ROUND);
-        String value_str = shared_preferences.getString("marker_line", "10.0f");
-        paint.setStrokeWidth(Float.parseFloat(value_str));
+        paint.setColor(Color.parseColor(color));
+        setWidth(width);
     }
 
     public Line() {
