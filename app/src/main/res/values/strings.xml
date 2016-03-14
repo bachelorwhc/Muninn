@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Muninn</string>
     <string name="select_photo_string">選擇影像</string>
+    <string name="setting_label">Setting</string>
+    <string name="setting_string">參數設定</string>
+    <string name="setting_size_fragment_title_string">尺寸設定</string>
+    <string name="setting_color_fragment_title_string">顏色設定</string>
+    <string name="setting_size_fragment_summary_string">繪圖內各種元素之尺寸設定</string>
+    <string name="setting_color_fragment_summary_string">繪圖內各種元素之顏色設定</string>
 </resources>

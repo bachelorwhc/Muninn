@@ -24,13 +24,26 @@ public class MuninnActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         findViewById(R.id.select_photo).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_photo_string)), SELECT_PICTURE);
+                swithcToGallery();
             }
         });
+        findViewById(R.id.setting).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                switchToSetting();
+            }
+        });
+    }
 
+    private void swithcToGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_photo_string)), SELECT_PICTURE);
+    }
+
+    private void switchToSetting() {
+        Intent act = new Intent(getApplicationContext(), SettingActivity.class);
+        startActivity(act);
     }
 
     @Override
