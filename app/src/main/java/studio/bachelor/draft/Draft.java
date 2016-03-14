@@ -37,18 +37,21 @@ public class Draft{
 
     public void createPathIfPathMode(Position position) {
         currentPath = new Path();
-        currentPath.moveTo((float)position.x, (float)position.y);
+        Position transformed = getDraftPosition(position);
+        currentPath.moveTo((float)transformed.x, (float)transformed.y);
     }
 
     public void recordPath(Position position) {
         if(currentPath != null) {
-            currentPath.lineTo((float) position.x, (float) position.y);
+            Position transformed = getDraftPosition(position);
+            currentPath.lineTo((float) transformed.x, (float) transformed.y);
         }
     }
 
     public void endPath(Position position) {
         if(currentPath != null) {
-            currentPath.lineTo((float) position.x, (float) position.y);
+            Position transformed = getDraftPosition(position);
+            currentPath.lineTo((float) transformed.x, (float) transformed.y);
             paths.add(currentPath);
             currentPath = null;
         }
