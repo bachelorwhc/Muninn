@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
@@ -56,12 +57,20 @@ public class DraftDirector {
     private Marker markerSelected;
     private Toolbox.Tool tool;
     private final Paint paint = new Paint();
+    private final Paint pathPaint = new Paint();
     private Context context;
+
+    // TODO: Refine this after completed.
+    private final List<Path> paths = new ArrayList<Path>();
+    private Path currentPath = null;
 
     {
         draft = Draft.getInstance();
         draftRenderer = new DraftRenderer(draft);
         rendererManager = RendererManager.getInstance();
+        pathPaint.setStrokeCap(Paint.Cap.ROUND);
+        pathPaint.setStrokeWidth(5.0f);
+        pathPaint.setStyle(Paint.Style.STROKE);
     }
 
     private DraftDirector() {
@@ -82,6 +91,27 @@ public class DraftDirector {
 
     public void setToolboxRenderer(Position upper_left_corner, float width, float height) {
         toolboxRenderer = new ToolboxRenderer(toolbox, upper_left_corner, width, height);
+    }
+
+    public void createPathIfPathMode(Position position) {
+        if(tool == Toolbox.Tool.PATH_MODE) {
+            currentPath = new Path();
+            currentPath.moveTo((float)position.x, (float)position.y);
+        }
+    }
+
+    public void recordPath(Position position) {
+        if(tool == Toolbox.Tool.PATH_MODE && currentPath != null) {
+            currentPath.lineTo((float) position.x, (float) position.y);
+        }
+    }
+
+    public void endPath(Position position) {
+        if(tool == Toolbox.Tool.PATH_MODE && currentPath != null) {
+            currentPath.lineTo((float) position.x, (float) position.y);
+            paths.add(currentPath);
+            currentPath = null;
+        }
     }
 
     public void addMarker(Position position) {
@@ -257,6 +287,12 @@ public class DraftDirector {
 
         canvas.restore();
 
+        if(currentPath != null)
+            canvas.drawPath(currentPath, pathPaint);
+
+        for(Path path : paths)
+            canvas.drawPath(path, pathPaint);
+
         if(toolboxRenderer != null)
             toolboxRenderer.onDraw(canvas);
 
@@ -267,7 +303,10 @@ public class DraftDirector {
     }
 
     public void selectTool(Toolbox.Tool tool) {
-        this.tool = tool;
+        if(tool == Toolbox.Tool.CLEAR_PATH)
+            paths.clear();
+        else
+            this.tool = tool;
         switch (tool) {
             case MAKER_TYPE_LINK:
                 this.markerType = MeasureMarker.class;

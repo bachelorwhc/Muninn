@@ -37,13 +37,14 @@ public class MotionHandler {
     public void postMotion(Motion motion, Toolbox.Tool tool, Marker marker, Position position_first, Position position_second) {
         switch (motion) {
             case DOWN:
-
+                director.createPathIfPathMode(position_first);
                 break;
             case MOVE:
                 director.moveHoldMarker(position_first);
+                director.recordPath(position_first);
                 break;
             case UP:
-
+                director.endPath(position_first);
                 director.releaseMarker();
                 director.deselectMarker();
                 break;
