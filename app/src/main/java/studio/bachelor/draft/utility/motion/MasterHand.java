@@ -63,6 +63,9 @@ public class MasterHand implements
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                postMotion(MotionHandler.Motion.DOWN, event, null);
+                break;
             case MotionEvent.ACTION_MOVE:
                 postMotion(MotionHandler.Motion.MOVE, event, null);
                 break;
@@ -84,7 +87,8 @@ public class MasterHand implements
     public boolean onFling(MotionEvent event1, MotionEvent event2, float velocity_x, float velocity_y) {
         Position zero = new Position();
         double velocity = zero.getDistanceTo(new Position(velocity_x, velocity_y));
-        if(velocity > 100)
+        Log.d("onFling", "v: " + velocity);
+        if(velocity > 5000)
             postMotion(MotionHandler.Motion.FlING, event1, event2);
         return true;
     }

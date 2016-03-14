@@ -36,8 +36,16 @@ public class MotionHandler {
 
     public void postMotion(Motion motion, Toolbox.Tool tool, Marker marker, Position position_first, Position position_second) {
         switch (motion) {
+            case DOWN:
+
+                break;
             case MOVE:
                 director.moveHoldMarker(position_first);
+                break;
+            case UP:
+
+                director.releaseMarker();
+                director.deselectMarker();
                 break;
             case LONG_PRESS:
                 if(director.getTool() == Toolbox.Tool.DELETER) {
@@ -50,10 +58,6 @@ public class MotionHandler {
                 break;
             case LONG_PRESS_READY:
                 director.selectingMarker(marker);
-                break;
-            case UP:
-                director.releaseMarker();
-                director.deselectMarker();
                 break;
             case DOUBLE_TAP:
                 director.addMarker(position_first);
