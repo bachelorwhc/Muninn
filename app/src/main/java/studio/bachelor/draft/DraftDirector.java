@@ -57,20 +57,20 @@ public class DraftDirector {
     private Marker markerSelected;
     private Toolbox.Tool tool;
     private final Paint paint = new Paint();
-    private final Paint pathPaint = new Paint();
+    //private final Paint pathPaint = new Paint();
     private Context context;
 
     // TODO: Refine this after completed.
-    private final List<Path> paths = new ArrayList<Path>();
-    private Path currentPath = null;
+//    private final List<Path> paths = new ArrayList<Path>();
+//    private Path currentPath = null;
 
     {
         draft = Draft.getInstance();
         draftRenderer = new DraftRenderer(draft);
         rendererManager = RendererManager.getInstance();
-        pathPaint.setStrokeCap(Paint.Cap.ROUND);
-        pathPaint.setStrokeWidth(5.0f);
-        pathPaint.setStyle(Paint.Style.STROKE);
+//        pathPaint.setStrokeCap(Paint.Cap.ROUND);
+//        pathPaint.setStrokeWidth(5.0f);
+//        pathPaint.setStyle(Paint.Style.STROKE);
     }
 
     private DraftDirector() {
@@ -95,22 +95,19 @@ public class DraftDirector {
 
     public void createPathIfPathMode(Position position) {
         if(tool == Toolbox.Tool.PATH_MODE) {
-            currentPath = new Path();
-            currentPath.moveTo((float)position.x, (float)position.y);
+            draft.createPathIfPathMode(position);
         }
     }
 
     public void recordPath(Position position) {
-        if(tool == Toolbox.Tool.PATH_MODE && currentPath != null) {
-            currentPath.lineTo((float) position.x, (float) position.y);
+        if(tool == Toolbox.Tool.PATH_MODE) {
+            draft.recordPath(position);
         }
     }
 
     public void endPath(Position position) {
-        if(tool == Toolbox.Tool.PATH_MODE && currentPath != null) {
-            currentPath.lineTo((float) position.x, (float) position.y);
-            paths.add(currentPath);
-            currentPath = null;
+        if(tool == Toolbox.Tool.PATH_MODE) {
+            draft.endPath(position);
         }
     }
 
@@ -287,12 +284,6 @@ public class DraftDirector {
 
         canvas.restore();
 
-        if(currentPath != null)
-            canvas.drawPath(currentPath, pathPaint);
-
-        for(Path path : paths)
-            canvas.drawPath(path, pathPaint);
-
         if(toolboxRenderer != null)
             toolboxRenderer.onDraw(canvas);
 
@@ -304,7 +295,7 @@ public class DraftDirector {
 
     public void selectTool(Toolbox.Tool tool) {
         if(tool == Toolbox.Tool.CLEAR_PATH)
-            paths.clear();
+            draft.clearPaths();
         else
             this.tool = tool;
         switch (tool) {

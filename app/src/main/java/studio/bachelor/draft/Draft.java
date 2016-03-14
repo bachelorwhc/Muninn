@@ -2,11 +2,16 @@ package studio.bachelor.draft;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import studio.bachelor.draft.marker.Marker;
 import studio.bachelor.draft.marker.MarkerManager;
+import studio.bachelor.draft.toolbox.Toolbox;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.renderer.layer.Layer;
 import studio.bachelor.draft.utility.renderer.layer.ScaleLayer;
@@ -19,6 +24,8 @@ public class Draft{
     private static final Draft instance = new Draft();
     public final ScaleLayer layer = new ScaleLayer(0, 0);
     public double scale = 1.0;
+    private final List<Path> paths = new ArrayList<Path>();
+    private Path currentPath = null;
 
     public static Draft getInstance() {
         return instance;
@@ -27,6 +34,37 @@ public class Draft{
     private Draft() {
 
     };
+
+    public void createPathIfPathMode(Position position) {
+        currentPath = new Path();
+        currentPath.moveTo((float)position.x, (float)position.y);
+    }
+
+    public void recordPath(Position position) {
+        if(currentPath != null) {
+            currentPath.lineTo((float) position.x, (float) position.y);
+        }
+    }
+
+    public void endPath(Position position) {
+        if(currentPath != null) {
+            currentPath.lineTo((float) position.x, (float) position.y);
+            paths.add(currentPath);
+            currentPath = null;
+        }
+    }
+
+    public void clearPaths() {
+        paths.clear();
+    }
+
+    public Path getCurrentPath() {
+        return currentPath;
+    }
+
+    public List<Path> getPaths() {
+        return paths;
+    }
 
     public void setWidthAndHeight(float width, float height) {
         this.layer.setWidthAndHeight(width, height);
