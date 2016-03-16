@@ -1,5 +1,9 @@
 package studio.bachelor.draft.marker;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import studio.bachelor.draft.utility.MapStringSupport;
 import studio.bachelor.draft.utility.Position;
 
@@ -31,5 +35,14 @@ public class AnchorMarker extends LinkMarker implements MapStringSupport {
 
     public String getElementName() {
         return "AnchorMarker";
+    }
+
+    @Override
+    public Node transformStateToDOMNode(Document document) {
+        Node node = super.transformStateToDOMNode(document);
+        Element real_distance = document.createElement("real_distance");
+        real_distance.appendChild(document.createTextNode("" + realDistance));
+        node.appendChild(real_distance);
+        return node;
     }
 }

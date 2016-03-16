@@ -74,6 +74,7 @@ public class DraftDirector {
     private final Paint paint = new Paint();
     //private final Paint pathPaint = new Paint();
     private Context context;
+    private int nextObjectID = 0;
 
     // TODO: Refine this after completed.
 //    private final List<Path> paths = new ArrayList<Path>();
@@ -94,6 +95,10 @@ public class DraftDirector {
 
     public void setViewContext(Context context) {
         this.context = context;
+    }
+
+    public int allocateObjectID() {
+        return nextObjectID++;
     }
 
     public void setBirdviewImageByUri(Uri uri) {

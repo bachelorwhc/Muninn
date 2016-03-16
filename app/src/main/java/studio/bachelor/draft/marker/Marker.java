@@ -20,13 +20,14 @@ public abstract class Marker implements Lockable, Touchable, Selectable, Removab
     public final Position position = new Position();
     protected static DraftDirector director = DraftDirector.instance;
     private boolean locked = false;
+    private int ID;
     /**
      * 目前的選取狀態({@link studio.bachelor.draft.utility.Selectable.State})，預設為未選取。
      */
     private State selectionState = State.UNSELECTED;
 
     public Marker() {
-
+        ID = director.allocateObjectID();
     }
 
     public Marker(Position position) {
@@ -115,7 +116,12 @@ public abstract class Marker implements Lockable, Touchable, Selectable, Removab
 
     public Node transformStateToDOMNode(Document document) {
         Element node = document.createElement(getElementName());
+        node.setAttribute("ID", "" + ID);
         node.appendChild(position.transformStateToDOMNode(document));
         return node;
+    }
+
+    public int getID() {
+        return ID;
     }
 }

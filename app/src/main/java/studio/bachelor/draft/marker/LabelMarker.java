@@ -1,5 +1,9 @@
 package studio.bachelor.draft.marker;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import studio.bachelor.draft.utility.MapStringSupport;
 
 /**
@@ -27,5 +31,14 @@ public class LabelMarker extends Marker implements MapStringSupport {
 
     public String getElementName() {
         return "LabelMarker";
+    }
+
+    @Override
+    public Node transformStateToDOMNode(Document document) {
+        Node node = super.transformStateToDOMNode(document);
+        Element element = document.createElement("label");
+        element.appendChild(document.createTextNode(label));
+        node.appendChild(element);
+        return node;
     }
 }

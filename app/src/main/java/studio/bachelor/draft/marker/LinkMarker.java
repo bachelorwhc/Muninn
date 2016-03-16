@@ -1,5 +1,9 @@
 package studio.bachelor.draft.marker;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import studio.bachelor.draft.utility.Position;
 
 /**
@@ -41,5 +45,14 @@ public class LinkMarker extends Marker {
 
     public String getElementName() {
         return "LinkMarker";
+    }
+
+    @Override
+    public Node transformStateToDOMNode(Document document) {
+        Node node = super.transformStateToDOMNode(document);
+        Element element = document.createElement("link");
+        element.appendChild(document.createTextNode("" + this.link.getID()));
+        node.appendChild(element);
+        return node;
     }
 }

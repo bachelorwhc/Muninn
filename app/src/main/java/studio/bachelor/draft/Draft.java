@@ -109,9 +109,11 @@ public class Draft{
 
     public Node writeDOM(Document document) {
         Element root = document.createElement("Draft");
+        Element markers = document.createElement("markers");
         for(Marker marker : layer.markerManager.markers) {
-            root.appendChild(marker.transformStateToDOMNode(document));
+            markers.appendChild(marker.transformStateToDOMNode(document));
         }
+        root.appendChild(markers);
         return root;
     }
 }
