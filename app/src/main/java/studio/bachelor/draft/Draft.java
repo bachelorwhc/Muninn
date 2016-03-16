@@ -6,6 +6,10 @@ import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.View;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -101,5 +105,13 @@ public class Draft{
 
     public void setScale(double scale) {
         this.scale = scale;
+    }
+
+    public Node writeDOM(Document document) {
+        Element root = document.createElement("Draft");
+        for(Marker marker : layer.markerManager.markers) {
+            root.appendChild(marker.transformStateToDOMNode(document));
+        }
+        return root;
     }
 }

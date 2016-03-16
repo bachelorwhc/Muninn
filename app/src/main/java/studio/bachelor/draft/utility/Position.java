@@ -2,10 +2,14 @@ package studio.bachelor.draft.utility;
 
 import android.view.MotionEvent;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+
 /**
  * Created by BACHELOR on 2016/02/24.
  */
-public class Position {
+public class Position implements Metadata {
     public double x;
     public double y;
 
@@ -33,5 +37,24 @@ public class Position {
         double dx = x - point.x;
         double dy = y - point.y;
         return (float)Math.sqrt(dx * dx + dy * dy);
+    }
+
+    public Node transformStateToDOMNode(Document document) {
+        Element node = document.createElement(getElementName());
+        setPositionNode(document, node);
+        return node;
+    }
+
+    public String getElementName() {
+        return "position";
+    }
+
+    private void setPositionNode(Document document, Element root) {
+        Element node = document.createElement("x");
+        node.appendChild(document.createTextNode("" + x));
+        root.appendChild(node);
+        node = document.createElement("y");
+        node.appendChild(document.createTextNode("" + y));
+        root.appendChild(node);
     }
 }

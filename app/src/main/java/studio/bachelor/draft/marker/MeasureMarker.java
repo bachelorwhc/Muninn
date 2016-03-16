@@ -36,4 +36,8 @@ public class MeasureMarker extends LinkMarker implements MapStringSupport {
         AnchorMarker anchor = AnchorMarker.getInstance();
         distance = position.getDistanceTo(link.position) * anchor.getScale();
     }
+
+    public String getElementName() {
+        return "MeasureMarker";
+    }
 }

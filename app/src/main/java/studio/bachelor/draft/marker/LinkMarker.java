@@ -38,4 +38,8 @@ public class LinkMarker extends Marker {
     }
 
     public Marker getLink() {return this.link;}
+
+    public String getElementName() {
+        return "LinkMarker";
+    }
 }

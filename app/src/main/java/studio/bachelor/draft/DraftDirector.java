@@ -7,17 +7,32 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.net.Uri;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
 import android.widget.EditText;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+
+import java.io.File;
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import studio.bachelor.draft.marker.AnchorMarker;
 import studio.bachelor.draft.marker.LabelMarker;
@@ -94,29 +109,29 @@ public class DraftDirector {
     }
 
     public void createPathIfPathMode(Position position) {
-        if(tool == Toolbox.Tool.PATH_MODE) {
+        if (tool == Toolbox.Tool.PATH_MODE) {
             draft.createPathIfPathMode(position);
         }
     }
 
     public void recordPath(Position position) {
-        if(tool == Toolbox.Tool.PATH_MODE) {
+        if (tool == Toolbox.Tool.PATH_MODE) {
             draft.recordPath(position);
         }
     }
 
     public void endPath(Position position) {
-        if(tool == Toolbox.Tool.PATH_MODE) {
+        if (tool == Toolbox.Tool.PATH_MODE) {
             draft.endPath(position);
         }
     }
 
     public void addMarker(Position position) {
-        if(markerType == MeasureMarker.class) {
+        if (markerType == MeasureMarker.class) {
             addMeasureMarker(position);
-        } else if(markerType == AnchorMarker.class) {
+        } else if (markerType == AnchorMarker.class) {
             addAnchorMarker(position);
-        } else if(markerType == LabelMarker.class) {
+        } else if (markerType == LabelMarker.class) {
             addLabelMarker(position);
         }
     }
@@ -138,7 +153,7 @@ public class DraftDirector {
                         String label_str = edit_text.getText().toString();
                         if (label_str.isEmpty())
                             return;
-                        ((LabelMarker)marker).setLabel(label_str);
+                        ((LabelMarker) marker).setLabel(label_str);
                     }
                 })
                 .show();
@@ -164,7 +179,7 @@ public class DraftDirector {
         final Marker marker = AnchorMarker.getInstance();
         Marker linked = AnchorMarker.getInstance().getLink();
 
-        if(renderableMap.containsKey(marker) && renderableMap.containsKey(linked)) {
+        if (renderableMap.containsKey(marker) && renderableMap.containsKey(linked)) {
             rendererManager.removeRenderer(renderableMap.get(marker));
             rendererManager.removeRenderer(renderableMap.get(linked));
         }
@@ -181,7 +196,7 @@ public class DraftDirector {
                         String distance_str = edit_text.getText().toString();
                         if (distance_str.isEmpty())
                             return;
-                        ((AnchorMarker)marker).setRealDistance(Double.parseDouble(distance_str));
+                        ((AnchorMarker) marker).setRealDistance(Double.parseDouble(distance_str));
                     }
                 })
                 .show();
@@ -217,9 +232,9 @@ public class DraftDirector {
     }
 
     public void removeMarker(Marker marker) {
-        if(marker == null)
+        if (marker == null)
             return;
-        if(renderableMap.containsKey(marker)) {
+        if (renderableMap.containsKey(marker)) {
             Renderable renderable = renderableMap.get(marker);
             rendererManager.removeRenderer(renderable);
             renderableMap.remove(marker);
@@ -284,17 +299,17 @@ public class DraftDirector {
 
         canvas.restore();
 
-        if(toolboxRenderer != null)
+        if (toolboxRenderer != null)
             toolboxRenderer.onDraw(canvas);
 
-        if(tool != null) {
+        if (tool != null) {
             Bitmap bitmap = ToolboxRenderer.getToolIcon(tool);
             canvas.drawBitmap(bitmap, canvas.getWidth() - bitmap.getWidth(), canvas.getHeight() - bitmap.getHeight(), paint);
         }
     }
 
     public void selectTool(Toolbox.Tool tool) {
-        if(tool == Toolbox.Tool.CLEAR_PATH)
+        if (tool == Toolbox.Tool.CLEAR_PATH)
             draft.clearPaths();
         else
             this.tool = tool;
@@ -330,14 +345,14 @@ public class DraftDirector {
     public void selectMarker() {
         this.markerSelected = this.markerSelecting;
         this.markerSelecting = null;
-        if(this.markerSelected != null)
+        if (this.markerSelected != null)
             this.markerSelected.select();
     }
 
     public void deselectMarker() {
-        if(this.markerSelected != null)
+        if (this.markerSelected != null)
             this.markerSelected.deselect();
-        if(this.markerSelecting != null)
+        if (this.markerSelecting != null)
             this.markerSelecting.deselect();
         this.markerSelecting = null;
         this.markerSelected = null;
@@ -345,17 +360,17 @@ public class DraftDirector {
 
     public void selectingMarker(Marker marker) {
         this.markerSelecting = marker;
-        if(this.markerSelecting != null)
+        if (this.markerSelecting != null)
             this.markerSelecting.selecting();
     }
 
     public void setMarkerType(Type type) {
-        if(type.toString().contains("Marker"))
+        if (type.toString().contains("Marker"))
             this.markerType = type;
     }
 
     public void moveHoldMarker(Position position) {
-        if(this.markerHold != null) {
+        if (this.markerHold != null) {
             draft.moveMarker(markerHold, position);
         }
     }
@@ -366,5 +381,28 @@ public class DraftDirector {
 
     public void moveDraft(Position offset) {
         this.draft.layer.moveLayer(offset);
+    }
+
+    public void exportToDOM() {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder;
+        try {
+            builder = factory.newDocumentBuilder();
+            Document document = builder.newDocument();
+            Node node = draft.writeDOM(document);
+            document.appendChild(node);
+
+            TransformerFactory transformer_factory = TransformerFactory.newInstance();
+            Transformer transformer = transformer_factory.newTransformer();
+            DOMSource source = new DOMSource(document);
+            Date current_time = new Date();
+            SimpleDateFormat simple_date_format = new SimpleDateFormat("yyyyMMddHHmmss");
+            String filename = simple_date_format.format(current_time) + ".xml";
+            File file = new File(Environment.getExternalStorageDirectory(), filename);
+            StreamResult result = new StreamResult(file);
+            transformer.transform(source, result);
+        } catch (Exception e) {
+
+        }
     }
 }

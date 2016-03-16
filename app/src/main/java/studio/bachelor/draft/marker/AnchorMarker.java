@@ -28,4 +28,8 @@ public class AnchorMarker extends LinkMarker implements MapStringSupport {
     public void setRealDistance(double real_distance) {
         this.realDistance = real_distance > 0.0 ? real_distance : 0.0;
     }
+
+    public String getElementName() {
+        return "AnchorMarker";
+    }
 }

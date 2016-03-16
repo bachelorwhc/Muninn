@@ -23,4 +23,8 @@ public class ControlMarker extends Marker {
     public void remove() {
 
     }
+
+    public String getElementName() {
+        return "ControlMarker";
+    }
 }
