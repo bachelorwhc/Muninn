@@ -35,7 +35,7 @@ public class MuninnActivity extends AppCompatActivity {
         findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DraftDirector.instance.exportToDOM();
+                DraftDirector.instance.exportToZip();
             }
         });
     }

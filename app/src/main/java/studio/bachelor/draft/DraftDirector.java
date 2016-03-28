@@ -427,10 +427,11 @@ public class DraftDirector {
                 final int BUFFER = 256;
                 Date current_time = new Date();
                 SimpleDateFormat simple_date_format = new SimpleDateFormat("yyyyMMddHHmmss");
-                String filename = simple_date_format.format(current_time) + ".xml";
+                String filename = simple_date_format.format(current_time) + ".zip";
                 BufferedInputStream origin = null;
-                FileOutputStream dest = new FileOutputStream(filename);
+                FileOutputStream dest = new FileOutputStream(new File(Environment.getExternalStorageDirectory(), filename));
                 ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
                 byte data[] = new byte[BUFFER];
 
                 FileInputStream file_input = new FileInputStream(data_file);
@@ -442,13 +443,11 @@ public class DraftDirector {
                 while ((count = origin.read(data, 0, BUFFER)) != -1) {
                     out.write(data, 0, count);
                 }
-
                 out.close();
                 origin.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
     }
 }
