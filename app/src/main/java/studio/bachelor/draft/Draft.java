@@ -3,13 +3,16 @@ package studio.bachelor.draft;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Path;
+import android.net.Uri;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,7 @@ import studio.bachelor.draft.toolbox.Toolbox;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.renderer.layer.Layer;
 import studio.bachelor.draft.utility.renderer.layer.ScaleLayer;
+import studio.bachelor.muninn.Muninn;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -107,11 +111,34 @@ public class Draft{
         this.scale = scale;
     }
 
+    private Node createMarkerNodeWithLayerScale(Marker marker, Document document) {
+        Node marker_node = marker.transformStateToDOMNode(document);
+        int length = marker_node.getChildNodes().getLength();
+        for(int i = 0; i < length; ++i) {
+            Node position_node = marker_node.getChildNodes().item(i);
+            if(position_node.getNodeName() == "position") {
+                Node x_node = position_node.getChildNodes().item(0);
+                Node y_node = position_node.getChildNodes().item(1);
+                Double x = Double.parseDouble(x_node.getTextContent());
+                Double y = Double.parseDouble(y_node.getTextContent());
+                Double scale_x = x / (layer.getWidth() / 2);
+                Double scale_y = y / (layer.getHeight() / 2);
+                x_node.setTextContent(scale_x.toString());
+                y_node.setTextContent(scale_y.toString());
+                break;
+            }
+            else
+                continue;
+        }
+        return marker_node;
+    }
+
     public Node writeDOM(Document document) {
         Element root = document.createElement("Draft");
         Element markers = document.createElement("markers");
         for(Marker marker : layer.markerManager.markers) {
-            markers.appendChild(marker.transformStateToDOMNode(document));
+            Node marker_node = createMarkerNodeWithLayerScale(marker, document);
+            markers.appendChild(marker_node);
         }
         root.appendChild(markers);
         return root;

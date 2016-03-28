@@ -17,7 +17,11 @@ import android.widget.EditText;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +30,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -75,6 +81,7 @@ public class DraftDirector {
     //private final Paint pathPaint = new Paint();
     private Context context;
     private int nextObjectID = 0;
+    private Uri birdViewUri;
 
     // TODO: Refine this after completed.
 //    private final List<Path> paths = new ArrayList<Path>();
@@ -102,6 +109,7 @@ public class DraftDirector {
     }
 
     public void setBirdviewImageByUri(Uri uri) {
+        uri = birdViewUri;
         draftRenderer.setBirdview(uri);
     }
 
@@ -388,7 +396,8 @@ public class DraftDirector {
         this.draft.layer.moveLayer(offset);
     }
 
-    public void exportToDOM() {
+    public File exportToDOM() {
+        File file = new File(Environment.getExternalStorageDirectory(), "data.xml");
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
@@ -400,14 +409,46 @@ public class DraftDirector {
             TransformerFactory transformer_factory = TransformerFactory.newInstance();
             Transformer transformer = transformer_factory.newTransformer();
             DOMSource source = new DOMSource(document);
-            Date current_time = new Date();
-            SimpleDateFormat simple_date_format = new SimpleDateFormat("yyyyMMddHHmmss");
-            String filename = simple_date_format.format(current_time) + ".xml";
-            File file = new File(Environment.getExternalStorageDirectory(), filename);
+//            Date current_time = new Date();
+//            SimpleDateFormat simple_date_format = new SimpleDateFormat("yyyyMMddHHmmss");
+//            String filename = simple_date_format.format(current_time) + ".xml";
             StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
         } catch (Exception e) {
 
         }
+        return file;
+    }
+
+    public void exportToZip() {
+        File data_file = exportToDOM();
+        if (data_file.exists()) {
+            try {
+                final int BUFFER = 256;
+                Date current_time = new Date();
+                SimpleDateFormat simple_date_format = new SimpleDateFormat("yyyyMMddHHmmss");
+                String filename = simple_date_format.format(current_time) + ".xml";
+                BufferedInputStream origin = null;
+                FileOutputStream dest = new FileOutputStream(filename);
+                ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+                byte data[] = new byte[BUFFER];
+
+                FileInputStream file_input = new FileInputStream(data_file);
+                origin = new BufferedInputStream(file_input, BUFFER);
+
+                ZipEntry entry = new ZipEntry(data_file.getName());
+                out.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    out.write(data, 0, count);
+                }
+
+                out.close();
+                origin.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

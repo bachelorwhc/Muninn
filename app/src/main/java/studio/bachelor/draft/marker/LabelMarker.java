@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import studio.bachelor.draft.utility.MapStringSupport;
+import studio.bachelor.draft.utility.renderer.layer.Layer;
 
 /**
  * Created by BACHELOR on 2016/03/10.

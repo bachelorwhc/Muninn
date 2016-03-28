@@ -11,6 +11,7 @@ import studio.bachelor.draft.utility.Removable;
 import studio.bachelor.draft.utility.Selectable;
 import studio.bachelor.draft.utility.Touchable;
 import studio.bachelor.draft.utility.Position;
+import studio.bachelor.draft.utility.renderer.layer.Layer;
 
 /**
  * <code>Marker</code>，作為<code>Draft</code>上所顯示的標記。

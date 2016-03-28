@@ -2,8 +2,13 @@ package studio.bachelor.muninn;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.net.Uri;
 import android.preference.PreferenceManager;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
 
 /**
  * Created by BACHELOR on 2016/03/01.
