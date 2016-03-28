@@ -5,13 +5,10 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.DocumentsContract;
 import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.util.Log;
 import android.widget.EditText;
 
 import org.w3c.dom.Document;
@@ -44,14 +41,12 @@ import studio.bachelor.draft.marker.AnchorMarker;
 import studio.bachelor.draft.marker.LabelMarker;
 import studio.bachelor.draft.marker.LinkMarker;
 import studio.bachelor.draft.marker.Marker;
-import studio.bachelor.draft.marker.MarkerManager;
 import studio.bachelor.draft.marker.MeasureMarker;
 import studio.bachelor.draft.marker.builder.ControlMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LabelMarkerBuilder;
 import studio.bachelor.draft.marker.builder.LinkMarkerBuilder;
 import studio.bachelor.draft.marker.builder.MeasureMarkerBuilder;
 import studio.bachelor.draft.toolbox.Toolbox;
-import studio.bachelor.draft.utility.Builder;
 import studio.bachelor.draft.utility.MapString;
 import studio.bachelor.draft.utility.Position;
 import studio.bachelor.draft.utility.Renderable;
@@ -59,7 +54,6 @@ import studio.bachelor.draft.utility.renderer.DraftRenderer;
 import studio.bachelor.draft.utility.renderer.RendererManager;
 import studio.bachelor.draft.utility.renderer.ToolboxRenderer;
 import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
-import studio.bachelor.muninn.Muninn;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -420,7 +414,7 @@ public class DraftDirector {
         return file;
     }
 
-    private void WriteDOMFile(File DOM_file, ZipOutputStream zip_stream, int BUFFER) {
+    private void WriteDOMFileToZIP(File DOM_file, ZipOutputStream zip_stream, int BUFFER) {
         try {
             byte data[] = new byte[BUFFER];
             FileInputStream file_input = new FileInputStream(DOM_file);
@@ -437,6 +431,28 @@ public class DraftDirector {
         }
     }
 
+    private void WriteBitmapToZIP(Bitmap bitmap, ZipOutputStream zip_stream, int BUFFER) {
+        byte data[] = new byte[BUFFER];
+        if (bitmap != null) {
+            try {
+                File image_file = new File(Environment.getExternalStorageDirectory(), "image.png");
+                FileOutputStream bitmap_file = new FileOutputStream(image_file);
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, bitmap_file);
+                FileInputStream file_input = new FileInputStream(image_file);
+                BufferedInputStream origin = new BufferedInputStream(file_input, BUFFER);
+                ZipEntry entry = new ZipEntry("image.png");
+                zip_stream.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                    zip_stream.write(data, 0, count);
+                }
+                origin.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void exportToZip() {
         File data_file = exportToDOM();
         if (data_file.exists()) {
@@ -447,13 +463,13 @@ public class DraftDirector {
                 FileOutputStream destination = new FileOutputStream(new File(Environment.getExternalStorageDirectory(), filename));
                 ZipOutputStream zip_stream = new ZipOutputStream(new BufferedOutputStream(destination));
                 final int BUFFER = 256;
-                WriteDOMFile(data_file, zip_stream, BUFFER);
+                WriteDOMFileToZIP(data_file, zip_stream, BUFFER);
 
-                
+                final Bitmap bitmap = draftRenderer.getBirdview();
+                WriteBitmapToZIP(bitmap, zip_stream, BUFFER);
 
                 zip_stream.close();
                 destination.close();
-
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {

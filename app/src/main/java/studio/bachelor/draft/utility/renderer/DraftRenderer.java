@@ -43,6 +43,10 @@ public class DraftRenderer implements Renderable {
         }
     }
 
+    public Bitmap getBirdview() {
+        return birdview;
+    }
+
     public void onDraw(Canvas canvas) {
         Position translate = draft.layer.getTranslate();
         float scale = draft.layer.getScale();
