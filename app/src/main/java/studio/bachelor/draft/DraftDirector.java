@@ -109,7 +109,7 @@ public class DraftDirector {
     }
 
     public void setBirdviewImageByUri(Uri uri) {
-        uri = birdViewUri;
+        birdViewUri = uri;
         draftRenderer.setBirdview(uri);
     }
 
@@ -420,33 +420,43 @@ public class DraftDirector {
         return file;
     }
 
+    private void WriteDOMFile(File DOM_file, ZipOutputStream zip_stream, int BUFFER) {
+        try {
+            byte data[] = new byte[BUFFER];
+            FileInputStream file_input = new FileInputStream(DOM_file);
+            BufferedInputStream origin = new BufferedInputStream(file_input, BUFFER);
+            ZipEntry entry = new ZipEntry(DOM_file.getName());
+            zip_stream.putNextEntry(entry);
+            int count;
+            while ((count = origin.read(data, 0, BUFFER)) != -1) {
+                zip_stream.write(data, 0, count);
+            }
+            origin.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void exportToZip() {
         File data_file = exportToDOM();
         if (data_file.exists()) {
             try {
-                final int BUFFER = 256;
                 Date current_time = new Date();
                 SimpleDateFormat simple_date_format = new SimpleDateFormat("yyyyMMddHHmmss");
                 String filename = simple_date_format.format(current_time) + ".zip";
-                BufferedInputStream origin = null;
-                FileOutputStream dest = new FileOutputStream(new File(Environment.getExternalStorageDirectory(), filename));
-                ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+                FileOutputStream destination = new FileOutputStream(new File(Environment.getExternalStorageDirectory(), filename));
+                ZipOutputStream zip_stream = new ZipOutputStream(new BufferedOutputStream(destination));
+                final int BUFFER = 256;
+                WriteDOMFile(data_file, zip_stream, BUFFER);
 
-                byte data[] = new byte[BUFFER];
+                
 
-                FileInputStream file_input = new FileInputStream(data_file);
-                origin = new BufferedInputStream(file_input, BUFFER);
+                zip_stream.close();
+                destination.close();
 
-                ZipEntry entry = new ZipEntry(data_file.getName());
-                out.putNextEntry(entry);
-                int count;
-                while ((count = origin.read(data, 0, BUFFER)) != -1) {
-                    out.write(data, 0, count);
-                }
-                out.close();
-                origin.close();
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
             }
         }
     }
