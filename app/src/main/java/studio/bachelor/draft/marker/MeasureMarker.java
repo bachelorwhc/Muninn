@@ -23,7 +23,14 @@ public class MeasureMarker extends LinkMarker implements MapStringSupport {
 
     @Override
     public String getObjectMappedString() {
-        return String.valueOf(distance);
+        String distance_str = null;
+        if(!Double.isNaN(distance)) {
+            distance_str = String.format("%.2f", distance);
+        }
+        else {
+            distance_str = " ";
+        }
+        return distance_str;
     }
 
     /**
