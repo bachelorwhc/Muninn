@@ -409,7 +409,7 @@ public class DraftDirector {
             StreamResult result = new StreamResult(file);
             transformer.transform(source, result);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return file;
     }
