@@ -43,6 +43,10 @@ public class DraftRenderer implements Renderable {
         }
     }
 
+    public void setBirdview(Bitmap bitmap) {
+        birdview = bitmap;
+    }
+
     public Bitmap getBirdview() {
         return birdview;
     }

@@ -38,4 +38,11 @@
         android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/setting" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_string"
+        android:id="@+id/sign"
+        android:layout_alignTop="@+id/save"
+        android:layout_toEndOf="@+id/save" />
 </RelativeLayout>

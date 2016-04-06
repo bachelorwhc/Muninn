@@ -1,5 +1,6 @@
 package studio.bachelor.muninn;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -21,6 +22,7 @@ public class MuninnActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_muninn);
+        final Context context = this;
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         findViewById(R.id.select_photo).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -36,6 +38,12 @@ public class MuninnActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 DraftDirector.instance.exportToZip();
+            }
+        });
+        findViewById(R.id.sign).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DraftDirector.instance.showSignPad(context);
             }
         });
     }
