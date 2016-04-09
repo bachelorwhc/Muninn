@@ -28,12 +28,13 @@ import studio.bachelor.muninn.Muninn;
  * Created by BACHELOR on 2016/02/24.
  */
 public class Draft{
-    private static final DraftDirector director = DraftDirector.instance;
     private static final Draft instance = new Draft();
     public final ScaleLayer layer = new ScaleLayer(0, 0);
     public double scale = 1.0;
     private final List<Path> paths = new ArrayList<Path>();
     private Path currentPath = null;
+    private double width = 1.0;
+    private double height = 1.0;
 
     public static Draft getInstance() {
         return instance;
@@ -42,6 +43,14 @@ public class Draft{
     private Draft() {
 
     };
+
+    public void setWidth(double width) {
+        this.width = width;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
+    }
 
     public void createPathIfPathMode(Position position) {
         currentPath = new Path();
@@ -121,8 +130,8 @@ public class Draft{
                 Node y_node = position_node.getChildNodes().item(1);
                 Double x = Double.parseDouble(x_node.getTextContent());
                 Double y = Double.parseDouble(y_node.getTextContent());
-                Double scale_x = x / (layer.getWidth() / 2);
-                Double scale_y = y / (layer.getHeight() / 2);
+                Double scale_x = x / (width / 2);
+                Double scale_y = y / (height / 2);
                 x_node.setTextContent(scale_x.toString());
                 y_node.setTextContent(scale_y.toString());
                 break;

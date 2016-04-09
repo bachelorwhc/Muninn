@@ -92,17 +92,11 @@ public class DraftDirector {
     private Thread MD5EncoderThread;
     private List<File> signFiles = new LinkedList<File>();
 
-    // TODO: Refine this after completed.
-//    private final List<Path> paths = new ArrayList<Path>();
-//    private Path currentPath = null;
 
     {
         draft = Draft.getInstance();
         draftRenderer = new DraftRenderer(draft);
         rendererManager = RendererManager.getInstance();
-//        pathPaint.setStrokeCap(Paint.Cap.ROUND);
-//        pathPaint.setStrokeWidth(5.0f);
-//        pathPaint.setStyle(Paint.Style.STROKE);
     }
 
     private DraftDirector() {
@@ -131,6 +125,8 @@ public class DraftDirector {
             Log.d("DraftRenderer", "setBirdview(Uri uri)" + e.toString());
         }
         draftRenderer.setBirdview(birdview);
+        draft.setWidth(birdview.getWidth());
+        draft.setHeight(birdview.getHeight());
     }
 
     public void setWidthAndHeight(float width, float height) {
