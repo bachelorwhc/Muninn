@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Debug;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -16,7 +18,8 @@ import studio.bachelor.draft.DraftDirector;
 import studio.bachelor.draft.DraftView;
 
 public class MuninnActivity extends AppCompatActivity {
-    private static final int SELECT_PICTURE = 7211;
+    private static final int SELECT_PICTURE = 21101;
+    private static final int SELECT_ZIP = 21102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +49,12 @@ public class MuninnActivity extends AppCompatActivity {
                 DraftDirector.instance.showSignPad(context);
             }
         });
+        findViewById(R.id.upload).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switchToZIPBrowsing();
+            }
+        });
     }
 
     private void swithcToGallery() {
@@ -53,6 +62,13 @@ public class MuninnActivity extends AppCompatActivity {
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.select_photo_string)), SELECT_PICTURE);
+    }
+
+    private void switchToZIPBrowsing() {
+        Intent intent = new Intent();
+        intent.setType("application/zip");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, SELECT_ZIP);
     }
 
     private void switchToSetting() {
@@ -66,6 +82,10 @@ public class MuninnActivity extends AppCompatActivity {
             if (requestCode == SELECT_PICTURE) {
                 Uri uri = data.getData();
                 DraftDirector.instance.setBirdviewImageByUri(uri);
+            }
+            else if(requestCode == SELECT_ZIP) {
+                Uri uri = data.getData();
+                DraftDirector.instance.uploadToSever(uri);
             }
         }
     }

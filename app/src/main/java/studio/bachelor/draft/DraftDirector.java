@@ -23,9 +23,11 @@ import org.w3c.dom.Node;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -65,6 +68,7 @@ import studio.bachelor.draft.utility.renderer.RendererManager;
 import studio.bachelor.draft.utility.renderer.ToolboxRenderer;
 import studio.bachelor.draft.utility.renderer.builder.MarkerRendererBuilder;
 import studio.bachelor.muninn.Muninn;
+import studio.bachelor.utility.FTPUploader;
 
 /**
  * Created by BACHELOR on 2016/02/24.
@@ -558,6 +562,24 @@ public class DraftDirector {
                 e.printStackTrace();
             } finally {
             }
+        }
+    }
+
+    public void uploadToSever(Uri uri) {
+        try {
+            InputStream stream = context.getContentResolver().openInputStream(uri);
+            FTPUploader uploader = new FTPUploader("134.208.2.201", "demo", "demo", 21);
+            Date date = new Date();
+            SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmss");
+            String filename = date_format.format(date);
+            uploader.setFile(filename, stream);
+            Thread thread = new Thread(uploader);
+            thread.start();
+            thread.join();
+            showToast("Uploaded", true);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

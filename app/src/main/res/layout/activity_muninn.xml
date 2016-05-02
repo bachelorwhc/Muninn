@@ -41,8 +41,16 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sign_string"
-        android:id="@+id/sign"
+        android:text="@string/upload_string"
+        android:id="@+id/upload"
         android:layout_alignTop="@+id/save"
         android:layout_toEndOf="@+id/save" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_string"
+        android:id="@+id/sign"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/upload" />
 </RelativeLayout>
