@@ -537,6 +537,8 @@ public class DraftDirector {
 
     public void exportToZip() {
         File data_file = exportToDOM();
+        Muninn.soundPlayer.start();
+        showToast("開始儲存，靜候完成訊息。", true);
         if (data_file.exists()) {
             try {
                 Date current_time = new Date();
@@ -557,6 +559,7 @@ public class DraftDirector {
 
                 zip_stream.close();
                 destination.close();
+                Muninn.soundPlayer.start();
                 showToast("儲存成功", true);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -567,6 +570,8 @@ public class DraftDirector {
 
     public void uploadToSever(Uri uri) {
         try {
+            Muninn.soundPlayer.start();
+            showToast("開始上傳，靜候完成訊息。", true);
             InputStream stream = context.getContentResolver().openInputStream(uri);
             FTPUploader uploader = new FTPUploader("134.208.2.201", "demo", "demo", 21);
             Date date = new Date();
@@ -576,7 +581,8 @@ public class DraftDirector {
             Thread thread = new Thread(uploader);
             thread.start();
             thread.join();
-            showToast("Uploaded", true);
+            Muninn.soundPlayer.start();
+            showToast("已上傳。", true);
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.CursorLoader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.provider.Settings;
 
 /**
  * Created by BACHELOR on 2016/03/01.
@@ -16,11 +18,13 @@ import android.provider.MediaStore;
 public class Muninn extends Application {
     private static Context context;
     private static SharedPreferences sharedPreferences;
+    static public MediaPlayer soundPlayer;
 
     public void onCreate() {
         super.onCreate();
         context = this;
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        soundPlayer = MediaPlayer.create(this, Settings.System.DEFAULT_NOTIFICATION_URI);
     }
 
     public static Context getContext() {
