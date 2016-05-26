@@ -2,6 +2,7 @@ package studio.bachelor.draft;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -573,16 +574,22 @@ public class DraftDirector {
             Muninn.soundPlayer.start();
             showToast("開始上傳，靜候完成訊息。", true);
             InputStream stream = context.getContentResolver().openInputStream(uri);
-            FTPUploader uploader = new FTPUploader("134.208.2.201", "demo", "demo", 21);
+            final SharedPreferences shared_preferences = Muninn.getSharedPreferences();
+            String server_address = shared_preferences.getString("server_address", "134.208.2.201");
+            String username = shared_preferences.getString("username", "demo");
+            String password = shared_preferences.getString("password", "demo");
+            String folder = shared_preferences.getString("server_folder", "/");
+            FTPUploader uploader = new FTPUploader(server_address, username, password, 21);
+            uploader.folder = folder;
             Date date = new Date();
             SimpleDateFormat date_format = new SimpleDateFormat("yyyyMMddHHmmss");
             String filename = date_format.format(date);
-            uploader.setFile(filename, stream);
+            uploader.setFile(filename + ".zip", stream);
             Thread thread = new Thread(uploader);
             thread.start();
             thread.join();
             Muninn.soundPlayer.start();
-            showToast("已上傳。", true);
+            showToast(uploader.error ? "上傳失敗" : "已上傳。", true);
         }
         catch (Exception e) {
             e.printStackTrace();

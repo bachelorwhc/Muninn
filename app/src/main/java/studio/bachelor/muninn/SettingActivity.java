@@ -27,7 +27,8 @@ public class SettingActivity extends PreferenceActivity {
     protected boolean isValidFragment(String fragment_name) {
         boolean is_valid =
                 ColorSettings.class.getName().equals(fragment_name) |
-                            SizeSettings.class.getName().equals(fragment_name);
+                        SizeSettings.class.getName().equals(fragment_name) |
+                        ServerSettings.class.getName().equals(fragment_name);
         return is_valid;
     }
 
@@ -48,6 +49,14 @@ public class SettingActivity extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.size);
+        }
+    }
+
+    public static class ServerSettings extends PreferenceFragment {
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.server);
         }
     }
 }

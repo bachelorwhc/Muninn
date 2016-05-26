@@ -44,4 +44,8 @@ public class Muninn extends Application {
         String preference = sharedPreferences.getString(key_str, default_str);
         return preference;
     }
+
+    public static SharedPreferences getSharedPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(context);
+    }
 }

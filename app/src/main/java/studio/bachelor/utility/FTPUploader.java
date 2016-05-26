@@ -14,6 +14,8 @@ public class FTPUploader implements Runnable {
     public final String username;
     public final String password;
     public int port = 21;
+    public boolean error = false;
+    public String folder = "/";
 
     InputStream inputStream;
     String filename;
@@ -38,13 +40,14 @@ public class FTPUploader implements Runnable {
             ftp_client.enterLocalActiveMode();
             ftp_client.setFileType(FTP.BINARY_FILE_TYPE);
 
-            boolean done = ftp_client.storeFile("/" + filename, inputStream);
+            boolean done = ftp_client.storeFile(folder + filename, inputStream);
             if (done) {
                 System.out.println("Uploaded.");
             }
 
         } catch (IOException ex) {
             System.out.println("Error: " + ex.getMessage());
+            this.error = true;
         } finally {
             try {
                 if (ftp_client.isConnected()) {
